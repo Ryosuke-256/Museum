@@ -1,7 +1,11 @@
 /JavaScriptを入れる位置はHTMLの<head>か<body>の最後。ただ読み込みの問題で<body>の最後に入れるのが最適。
+
+
 /ラムダ式 (引数) =>{処理}とかく。
 
+
 起動は作業ディレクトリで npm run dev
+
 
 Viteの注意点
 ・プロジェクトを入れた後は npm install
@@ -10,22 +14,28 @@ Viteの注意点
 ・src/ 内は index.html, script.js, style.css だけ
 ・
 
+
 座標の話
-・webGL座標：x軸は右、y軸は上、z軸は後ろ
-・window座標： x軸は右、y軸は下
+・webGL座標：x軸は右、y軸は上、z軸は後ろ 原点は画面の中心
+・window座標： x軸は右、y軸は下　原点は左上
+
 
 複数のオブジェクトを同時にトランスフォームさせたいときはGroup
+
 
 時間を表す関数はいくつかある
 ・グローバル秒数を測る Data.now()
 ・ファイルを起動してからの秒数を測る perfomance.now()
 ・関数を作ってからの秒数を測る Clock()
 
+
 アニメーションライブラリはいっぱいある！(有名なのはGSAP?)
+
 
 カメラ編
 ・カメラにはいろいろある！
 ・カメラコントロールも色々ある
+
 
 loader
 ・第1引数：ファイルのパス
@@ -33,9 +43,11 @@ loader
 ・第3引数：進行状況を知らせるコールバック関数
 ・第4引数：エラーハンドリング関数
 
+
 gltf
 ・プロジェクトファイル (=.blend)
 ・プロジェクトファイル内のtransform情報が引き継がれる
+
 
 obj
 ・ModelFile
@@ -43,7 +55,9 @@ obj
     ・ロード元やchildrenで様々な情報が見れるので、3Dモデルを弄る時はこれを参照
 ・新規オブジェクトとして読み込まれる
 
+
 空のデータを宣言するときは const a = null
+
 
 three-mesh-UI
 ・インストール
@@ -54,6 +68,7 @@ package.jsonに以下のように書く
     "three-mesh-ui": "^6.5.4"
   }
 
+
 ライブラリを入れるときは
 npm install --save newlibraly
 そうするとpackage.jsonのdependenciesに書き込まれ、ついでにnpm installしてくれる
@@ -63,13 +78,16 @@ npm install
 ・Github
 https://github.com/felixmariotto/three-mesh-ui
 
+
 thre-mesh-uiが基本VR用なのでマウスでシミュレーションするときはそれ用のプログラムを組む!
 ryacast()
+
 
 array.reduce(callback)
 ・隣り合う２つの配列要素に対して左から右へ同時に関数を適用し、単一の値にする
 ・例：配列の中身を１つずつ足していって合計を求める
 https://qiita.com/chihiro/items/1047e40514a778c08baa
+
 
 UIインタラクションmemo
 ・UIパネルを作り、インタラクションによる状態変化を設定 three-mesh-ui
@@ -80,17 +98,21 @@ UIインタラクションmemo
 ↓
 ・Eventlistenerで各処理に対してkey変数を変化、もしくは与える addEventlistener
 
+
 onafterupdate
 ・Uiの更新後に呼ばれるcallback関数
 ・対象はtextやblocksなどなんでも
 
+
 setInterval(関数,処理間隔(ミリs))
 ・第一引数の関数を第二引数の間隔で実行する
+
 
 screenshot
 Three.jsはレンダラーを標準装備しているのでhtml2canvasの必要がない
 imgData = renderer.domElement.toDataURL()
 これでok
+
 
 一定間隔ごとに処理を行いたい場合
 1.setTimeout(function,second)
@@ -101,6 +123,7 @@ imgData = renderer.domElement.toDataURL()
 +α
 ループの中でループとかやるときは非同期処理にした方がいい
 
+
 非同期処理 async function
 基本形
 return new Promise(resolve => callback(resolve))
@@ -108,9 +131,11 @@ return new Promise(resolve => callback(resolve))
 await : 指定した関数のPromiseの結果が返されるまでasync function内の処理を一時停止する
 結果が返されればasync function内の処理を再開する
 
+
 Blobとは
 ・様々なタイプのデータを扱える
 ・Blobが作成された後、その内容を変更することはできない
+
 
 配列取り扱い
 ・配列内のすべての要素に同じ処理を加えるとき
@@ -133,6 +158,7 @@ const group = new THREE.Group()
 group.children[0]
 グループの中を抽出可能
 
+
 webページを公開
 ・ターミナルでnpm run build
 ・vercelのインストール npm install -g vercel
@@ -149,10 +175,12 @@ webページを公開
 アップデート
 ・npm run deploy
 
+
 GSAP memo
 ・アニメーションは本文に記述 (loopの中には書かない)
 
 ・プロパティはリアルタイムで更新されている
+
 
 keydownは単押し判定から長押し判定になるまで0.5sの遅延がある
 
@@ -181,12 +209,12 @@ postprocessing内の数値を変えるには
 glitchPass.uniforms.~~.value
 
 
-
 Eventlistenerトリガーアニメーション
 ・addEventlistener内ではやらない方がいい
   ・なんか発火してから0.5s程処理がされない時間がある
 ・addEventlistenerはあくまでフラグ管理用にしておくと〇
 ・なぜかgsapは普通に動く(非同期だから？)
+
 
 htmlへのテキスト追加
 const newParagraph = document.createElement('p');
