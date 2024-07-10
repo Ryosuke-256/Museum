@@ -55,14 +55,3 @@ window.addEventListener('click',()=>{
     }
     console.log('triggered' + bwval)
 })
-
-/**
-function setup() {
-    createCanvas(400, 400)
-}
-
-function draw() {
-    background(220)
-    ellipse(mouseX, mouseY, 50, 50)
-}
-*/
