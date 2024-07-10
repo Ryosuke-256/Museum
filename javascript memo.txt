@@ -226,4 +226,13 @@ document.body.appendChild(newParagraph); //テキストのbodyへの追加
 const myElement = document.getElementById('hdr_name');
 myElement.textContent = hdr_url[index];
 
+p5js
+起動モードにはgrobalとinstanceがある
+grobal:htmlの方でp5.jsのファイルを指定することでp5.jsの関数や変数をグローバルスコープで使える
+insatance:javascriptの方でimportして使う
+
+
+
+
+
 
