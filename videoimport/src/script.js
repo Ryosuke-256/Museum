@@ -90,8 +90,7 @@ scene.add(cursor1_mesh)
 /**
  * Video
  */
-let VideoTexture,video_mesh,video
-const vps = 2
+let video,video_mesh
 let videoURL = "./video/2024nenga_1.2.mp4"
 initVideo(videoURL)
 
@@ -129,6 +128,7 @@ document.addEventListener('keydown',(e)=>{
     }
 })
 
+//initialization video import
 function initVideo(videoURL){
     video = document.createElement('video')
     const video_scale = 120 //1920x1080 : 120, 1280x720 : 80,640x360 : 40
@@ -139,7 +139,7 @@ function initVideo(videoURL){
     video.muted = true
     video.src = videoURL
 
-    VideoTexture = new THREE.VideoTexture(video)
+    let VideoTexture = new THREE.VideoTexture(video)
     VideoTexture.minFilter = THREE.LinearFilter
     VideoTexture.magFilter = THREE.LinearFilter
     VideoTexture.colorSpace = THREE.SRGBColorSpace
@@ -150,6 +150,7 @@ function initVideo(videoURL){
         video_mesh.material.dispose()
     }
 
+    const vps = 2
     video_mesh = new THREE.Mesh(
         new THREE.PlaneGeometry(1.6*vps,0.9*vps,10,10),
         new THREE.MeshBasicMaterial({map:VideoTexture})
