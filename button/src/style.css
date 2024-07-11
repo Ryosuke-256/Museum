@@ -4,6 +4,13 @@
     padding:0;
 }
 
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+}
+
 .webgl
 {
     position:absolute;
@@ -13,12 +20,6 @@
     z-index: -1;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    position: relative;
-}
 .container {
     position: absolute;
     top: 0;
