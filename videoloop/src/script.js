@@ -322,7 +322,7 @@ const sphere2 = new THREE.Mesh(
     new THREE.MeshStandardMaterial({color:0x00ff00, roughness:0.1, metalness: 0.8
     })
 )
-sphere2.position.set(-1.5,0,0)
+sphere2.position.set(-0.9,0,0)
 sphere2.visible = false
 scene.add(sphere2)
 
@@ -336,11 +336,15 @@ sphere3.position.set(1.5,0,0)
 sphere3.visible = false
 scene.add(sphere3)
 
+let sphere2_flag = false
 document.addEventListener("keydown",(e)=>{
     if(e.keyCode == 81){
-        const currentTime = video.currentTime
-        effectTiming.push(currentTime)
-        ef_sph2()
+        if(!sphere2_flag){
+            sphere2_flag = true
+            const currentTime = video.currentTime
+            effectTiming.push(currentTime)
+            ef_sph2()
+        }
     }
     if(e.keyCode == 87){
         const currentTime = video.currentTime
@@ -350,6 +354,7 @@ document.addEventListener("keydown",(e)=>{
 })
 document.addEventListener("keyup",(e)=>{
     if(e.keyCode == 81){
+        sphere2_flag = false
         const currentTime = video.currentTime
         effectTiming.push(currentTime)
         ef_sph2()
@@ -364,8 +369,10 @@ document.addEventListener("keyup",(e)=>{
 function ef_sph2(){
     if(!sphere2.visible){
         sphere2.visible=true
+        console.log("visible : " + sphere2.visible)
     } else {
         sphere2.visible = false
+        console.log("visible : " + sphere2.visible)
     }
 }
 
