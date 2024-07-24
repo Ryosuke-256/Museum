@@ -253,5 +253,10 @@ screen⇔camera
 app.stage.appendChild()で追加
 app.stage.removeChild()で消去
 
-
+videoの再生時間発火
+・addevnetlistener('timeupdate",()=>{})
+chromeでは0.2~0.3s毎に発火
+・animationloop内発火
+chromeでは0.015毎に発火
+・クリック間隔は最短で約0.06~0.1sくらい
 
