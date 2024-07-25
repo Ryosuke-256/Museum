@@ -129,7 +129,7 @@ function initVideo(videoURL){
     video.width = 16*video_scale
     video.height = 9*video_scale
     video.autoplay = true
-    video.loop = true
+    video.loop = false
     video.muted = true
     video.src = videoURL
     video.play()
@@ -162,23 +162,30 @@ const effectTiming_ef2 = []
 const effectTiming_ef3 = []
 const effectTiming_ef4 = []
 
-//currentTime - effectTime > -0.2 && currentTime - effectTime < 0
 //effecttimingcheck
 video.addEventListener('timeupdate',()=>{
     const currentTime = video.currentTime
     effectTiming_ef2.forEach((effectTime)=>{
-        if(currentTime - effectTime > -0.3 && currentTime - effectTime < 0){
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
             ef_sph3()
         }
     })
     effectTiming_ef3.forEach((effectTime)=>{
-        if(currentTime - effectTime > -0.3 && currentTime - effectTime < 0){
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
             ef3()
         }
     })
+    effectTiming_ef4.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef4()
+        }
+    })
 })
-
-//effectitimingcheck2
+//ended
+video.addEventListener("ended",()=>{
+    console.log("one loop was finished")
+    video.play()
+})
 
 /**Movie */
 
@@ -257,13 +264,12 @@ function WindowFullscreen(){
 
 //loop animation
 function animate(){
+    //update
     controls.update()
     // Render
     renderer.render(scene, camera)
-
     //second
     const sec = performance.now()/1000
-
     //video
     videotime = video.currentTime
     effectTiming_ef1_1.forEach((effecttime)=>{
@@ -357,26 +363,11 @@ sphere2.visible = false
 scene.add(sphere2)
 
 //hontai
-function ef_sph2(){
-    if(!sphere2.visible){
-        sphere2.visible=true
-        //console.log("sphere2.visible : " + sphere2.visible)
-        //console.log("sphere2_flg : ", + sphere2_flag)
-    } else {
-        sphere2.visible = false
-        //console.log("sphere2.visible : " + sphere2.visible)
-        //console.log("sphere2_flg : ", + sphere2_flag)
-    }
-}
 function ef_sph2_1(){
     sphere2.visible=true
-    //console.log("sphere2.visible : " + sphere2.visible)
-    //console.log("sphere2_flg : ", + sphere2_flag)
 }
 function ef_sph2_2(){
     sphere2.visible = false
-    //console.log("sphere2.visible : " + sphere2.visible)
-    //console.log("sphere2_flg : ", + sphere2_flag)
 }
 
 //eventlistner
@@ -586,7 +577,8 @@ document.addEventListener('keyup',(e)=>{
 /**
  * Effect4
  */
-const torus1 = THREE.Mesh(
+//initialization
+const torus1 = new THREE.Mesh(
     new THREE.TorusGeometry(1.5,1,16,32),
     new THREE.MeshStandardMaterial({color:0xff0000, roughness:0.1, metalness: 0.8,
         transparent:true,opacity:1
@@ -597,22 +589,27 @@ scene.add(torus1)
 
 let ef4_flag = false
 
+//hontai
 async function ef4(){
-    if(!torus1.visible){
+    if(!ef4_flag){
         torus1.visible=true
-        //console.log("torus1.visible : " + torus1.visible)
-        //console.log("sphere2_flg : ", + sphere2_flag)
+        ef4_flag = true
     } else {
         torus1.visible = false
-        //console.log("torus1.visible : " + torus1.visible)
-        //console.log("sphere2_flg : ", + sphere2_flag)
+        ef4_flag = false
     }
 }
-
+//Eventlitner
 document.addEventListener("keydown",(e)=>{
-    if(e.keyCode == 82){
+    if(e.keyCode == 84){
         const currentTime = video.currentTime
         effectTiming_ef4.push(currentTime)
+        ef4()
+    }
+})
+video.addEventListener("ended",()=>{
+    if(ef4_flag){
+        ef4()
     }
 })
 /**Effect4 */
