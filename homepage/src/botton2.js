@@ -2,31 +2,31 @@ const sizes = {width: window.innerWidth,height: window.innerHeight}
 const buttonContainer = document.getElementById('UIcontainer_2p')
 
 //button1
-const upload_icon1 = 'url("icon/Upload.png")'
+const upload_icon1 = 'url("icon/Music.png")'
 const button1_color = '0FE290'
 let button1_top = 10
 let button1_left = 25
-let button1 = createButton(button1_left,button1_top,upload_icon1,button1_color,()=>{
+let button1 = createButton("Sound",button1_left,button1_top,upload_icon1,button1_color,()=>{
     console.log("Sound")
 })
 buttonContainer.appendChild(button1)
 
 //button2
-const upload_icon2 = 'url("icon/Upload.png")'
+const upload_icon2 = 'url("icon/Video.png")'
 const button2_color = '0FE290'
 let button2_top = 10
 let button2_left = 25+75+25
-let button2 = createButton(button2_left,button2_top,upload_icon2,button2_color,()=>{
+let button2 = createButton("Effect",button2_left,button2_top,upload_icon2,button2_color,()=>{
     console.log("Effect")
 })
 buttonContainer.appendChild(button2)
 
 //button3
-const upload_icon3 = 'url("icon/Upload.png")'
+const upload_icon3 = 'url("icon/Package.png")'
 const button3_color = '0FE290'
 let button3_top = 10
 let button3_left = 25+100+100
-let button3 = createButton(button3_left,button3_top,upload_icon3,button3_color,()=>{
+let button3 = createButton("Object",button3_left,button3_top,upload_icon3,button3_color,()=>{
     console.log("Object")
 })
 buttonContainer.appendChild(button3)
@@ -36,7 +36,7 @@ const upload_icon4 = 'url("icon/Upload.png")'
 const button4_color = '0FE290'
 let button4_top = 10
 let button4_left = 25+100+100+100
-let button4 = createButton(button4_left,button4_top,upload_icon4,button4_color,()=>{
+let button4 = createButton("Importvideo",button4_left,button4_top,upload_icon4,button4_color,()=>{
     console.log("ImportVideo")
 })
 button4.addEventListener("click",()=>{
@@ -47,8 +47,9 @@ buttonContainer.appendChild(button4)
 /**
  * Function
  *  */
-function createButton(left,top,texture,color,onClick){
+function createButton(id,left,top,texture,color,onClick){
     const button = document.createElement('button')
+    button.id = id
     button.className = 'button1'
     button.style.top = `${top}px`
     button.style.left = `${left}px`

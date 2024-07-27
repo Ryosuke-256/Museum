@@ -181,28 +181,12 @@ function videoaspect(){
     return video_mesh_mag
 }
 
-/**
-function videoaspect(){
-    let window_ratio = sizes.width/sizes.height
-    let video_mesh_horizone,video_mesh_vertical
-    if(window_ratio >= 1.6/0.9){
-        video_mesh_horizone = sizes.width/position_ratio
-        video_mesh_vertical = 0.9/1.6*video_mesh_horizone
-    }else if (window_ratio < 1.6/0.9){
-        video_mesh_vertical = sizes.height/position_ratio
-        video_mesh_horizone = 1.6/0.9*video_mesh_vertical
-    }
-    return [video_mesh_horizone,video_mesh_vertical]
-}
-*/
-
 document.addEventListener("keydown",(e)=>{
     if(e.keyCode == 90){
         console.log("window.width"+sizes.width/250 +"\nwindow.heigth"+sizes.height/250)
         console.log(video_mesh.geometry.widthz)
     }
 })
-
 
 //effectTimingList
 const effectTiming_ef1_1 = []
@@ -339,7 +323,7 @@ function animate(){
 window.addEventListener('resize', onWindowResize)
 
 //fullscreen
-window.addEventListener("dblclick",WindowFullscreen)
+//window.addEventListener("dblclick",WindowFullscreen)
 
 //number key to camera
 document.addEventListener("keydown",(e)=>{
