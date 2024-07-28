@@ -1,0 +1,15 @@
+*
+{
+    margin:0;
+    padding:0;
+}
+.p5
+{
+    position:fixed;
+    outline: none;
+}
+.webgl
+{
+    position:static;
+    outline:none;
+}

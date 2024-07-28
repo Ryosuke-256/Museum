@@ -1,0 +1,345 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
+        }
+      }
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+
+      // サイズを指定
+      const width = 960;
+      const height = 540;
+
+      // レンダラーを作成
+      const renderer = new THREE.WebGLRenderer({
+        canvas: document.querySelector("#myCanvas"),
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(width, height);
+
+      // シーンを作成
+      const scene = new THREE.Scene();
+
+      // カメラを作成
+      const camera = new THREE.PerspectiveCamera(45, width / height);
+      camera.position.set(0, 0, +1000);
+
+      // 箱を作成
+      const geometry = new THREE.BoxGeometry(400, 400, 400);
+      const material = new THREE.MeshNormalMaterial();
+      const box = new THREE.Mesh(geometry, material);
+      scene.add(box);
+
+      // ちらつきのための変数を作成
+      let isFlickering = false;
+      let flickerInterval;
+
+      // フリック用のdivを作成
+      const flickerDiv = document.createElement('div');
+      flickerDiv.style.position = 'fixed';
+      flickerDiv.style.top = '0';
+      flickerDiv.style.left = '0';
+      flickerDiv.style.width = '100%';
+      flickerDiv.style.height = '100%';
+      flickerDiv.style.backgroundColor = 'red';
+      flickerDiv.style.zIndex = '1000';
+      flickerDiv.style.display = 'none';
+      document.body.appendChild(flickerDiv);
+
+      // スノーノイズ用のcanvasを作成
+      const snowCanvas = document.createElement('canvas');
+      snowCanvas.width = window.innerWidth;
+      snowCanvas.height = window.innerHeight;
+      snowCanvas.style.position = 'fixed';
+      snowCanvas.style.top = '0';
+      snowCanvas.style.left = '0';
+      snowCanvas.style.zIndex = '1000';
+      snowCanvas.style.display = 'none';
+      document.body.appendChild(snowCanvas);
+
+      const snowContext = snowCanvas.getContext('2d');
+      let isSnowing = false;
+      let snowInterval;
+
+      // グリッチエフェクト用のcanvasを作成
+      const glitchCanvas = document.createElement('canvas');
+      glitchCanvas.width = window.innerWidth;
+      glitchCanvas.height = window.innerHeight;
+      glitchCanvas.style.position = 'fixed';
+      glitchCanvas.style.top = '0';
+      glitchCanvas.style.left = '0';
+      glitchCanvas.style.zIndex = '1000';
+      glitchCanvas.style.display = 'none';
+      document.body.appendChild(glitchCanvas);
+
+      const glitchContext = glitchCanvas.getContext('2d');
+      let isGlitching = false;
+      let glitchInterval;
+
+      // ブラーエフェクト用のスタイルを作成
+      const blurDiv = document.createElement('div');
+      blurDiv.style.position = 'fixed';
+      blurDiv.style.top = '0';
+      blurDiv.style.left = '0';
+      blurDiv.style.width = '100%';
+      blurDiv.style.height = '100%';
+      blurDiv.style.backdropFilter = 'blur(0px)';
+      blurDiv.style.zIndex = '1000';
+      blurDiv.style.display = 'none';
+      document.body.appendChild(blurDiv);
+
+      let isBlurring = false;
+      let blurInterval;
+
+      // カラーフラッシュ用のdivを作成
+      const flashDiv = document.createElement('div');
+      flashDiv.style.position = 'fixed';
+      flashDiv.style.top = '0';
+      flashDiv.style.left = '0';
+      flashDiv.style.width = '100%';
+      flashDiv.style.height = '100%';
+      flashDiv.style.backgroundColor = 'transparent';
+      flashDiv.style.zIndex = '1000';
+      flashDiv.style.display = 'none';
+      document.body.appendChild(flashDiv);
+
+      let isFlashing = false;
+      let flashInterval;
+
+      // フェードイン・フェードアウト用のdivを作成
+      const fadeDiv = document.createElement('div');
+      fadeDiv.style.position = 'fixed';
+      fadeDiv.style.top = '0';
+      fadeDiv.style.left = '0';
+      fadeDiv.style.width = '100%';
+      fadeDiv.style.height = '100%';
+      fadeDiv.style.backgroundColor = 'black';
+      fadeDiv.style.opacity = '0';
+      fadeDiv.style.zIndex = '1000';
+      fadeDiv.style.display = 'none';
+      document.body.appendChild(fadeDiv);
+
+      let isFading = false;
+      let fadeInterval;
+
+      // シェイクエフェクト用のdivを作成
+      const shakeDiv = document.createElement('div');
+      shakeDiv.style.position = 'fixed';
+      shakeDiv.style.top = '0';
+      shakeDiv.style.left = '0';
+      shakeDiv.style.width = '100%';
+      shakeDiv.style.height = '100%';
+      shakeDiv.style.zIndex = '1000';
+      shakeDiv.style.display = 'none';
+      document.body.appendChild(shakeDiv);
+
+      let isShaking = false;
+      let shakeInterval;
+
+      // キーボードイベントを追加
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'A' || event.key === 'a') {
+          if (!isFlickering) {
+            startFlickering();
+          } else {
+            stopFlickering();
+          }
+        } else if (event.key === 'B' || event.key === 'b') {
+          if (!isSnowing) {
+            startSnowing();
+          } else {
+            stopSnowing();
+          }
+        } else if (event.key === 'C' || event.key === 'c') {
+          if (!isGlitching) {
+            startGlitching();
+          } else {
+            stopGlitching();
+          }
+        } else if (event.key === 'D' || event.key === 'd') {
+          if (!isBlurring) {
+            startBlurring();
+          } else {
+            stopBlurring();
+          }
+        } else if (event.key === 'E' || event.key === 'e') {
+          if (!isFlashing) {
+            startFlashing();
+          } else {
+            stopFlashing();
+          }
+        } else if (event.key === 'F' || event.key === 'f') {
+          if (!isFading) {
+            startFading();
+          } else {
+            stopFading();
+          }
+        } else if (event.key === 'G' || event.key === 'g') {
+          if (!isShaking) {
+            startShaking();
+          } else {
+            stopShaking();
+          }
+        }
+      });
+
+      // ちらつきを開始する関数
+      function startFlickering() {
+        isFlickering = true;
+        flickerDiv.style.display = 'block';
+        flickerInterval = setInterval(() => {
+          flickerDiv.style.display = flickerDiv.style.display === 'none' ? 'block' : 'none';
+        }, 100); // 100msごとに表示・非表示を切り替え
+      }
+
+      // ちらつきを停止する関数
+      function stopFlickering() {
+        isFlickering = false;
+        clearInterval(flickerInterval);
+        flickerDiv.style.display = 'none'; // 背景を非表示に戻す
+      }
+
+      // スノーノイズを開始する関数
+      function startSnowing() {
+        isSnowing = true;
+        snowCanvas.style.display = 'block';
+        snowInterval = setInterval(() => {
+          const imageData = snowContext.createImageData(snowCanvas.width, snowCanvas.height);
+          for (let i = 0; i < imageData.data.length; i += 4) {
+            const color = Math.random() * 255;
+            imageData.data[i] = color;
+            imageData.data[i + 1] = color;
+            imageData.data[i + 2] = color;
+            imageData.data[i + 3] = 255;
+          }
+          snowContext.putImageData(imageData, 0, 0);
+        }, 100); // 100msごとにノイズを更新
+      }
+
+      // スノーノイズを停止する関数
+      function stopSnowing() {
+        isSnowing = false;
+        clearInterval(snowInterval);
+        snowCanvas.style.display = 'none'; // ノイズを非表示に戻す
+      }
+
+      // グリッチエフェクトを開始する関数
+      function startGlitching() {
+        isGlitching = true;
+        glitchCanvas.style.display = 'block';
+        glitchInterval = setInterval(() => {
+          glitchContext.clearRect(0, 0, glitchCanvas.width, glitchCanvas.height);
+          const numLines = 10;
+          for (let i = 0; i < numLines; i++) {
+            glitchContext.strokeStyle = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            glitchContext.lineWidth = Math.random() * 5 + 1;
+            glitchContext.beginPath();
+            glitchContext.moveTo(Math.random() * glitchCanvas.width, Math.random() * glitchCanvas.height);
+            glitchContext.lineTo(Math.random() * glitchCanvas.width, Math.random() * glitchCanvas.height);
+            glitchContext.stroke();
+          }
+        }, 100); // 100msごとにグリッチエフェクトを更新
+      }
+
+      // グリッチエフェクトを停止する関数
+      function stopGlitching() {
+        isGlitching = false;
+        clearInterval(glitchInterval);
+        glitchCanvas.style.display = 'none'; // エフェクトを非表示に戻す
+      }
+
+      // ブラーエフェクトを開始する関数
+      function startBlurring() {
+        isBlurring = true;
+        blurDiv.style.display = 'block';
+        blurInterval = setInterval(() => {
+          const blurAmount = parseInt(blurDiv.style.backdropFilter.replace('blur(', '').replace('px)', '')) || 0;
+          blurDiv.style.backdropFilter = `blur(${(blurAmount + 1) % 10}px)`;
+        }, 100); // 100msごとにブラー量を更新
+      }
+
+      // ブラーエフェクトを停止する関数
+      function stopBlurring() {
+        isBlurring = false;
+        clearInterval(blurInterval);
+        blurDiv.style.display = 'none'; // エフェクトを非表示に戻す
+        blurDiv.style.backdropFilter = 'blur(0px)'; // ブラー量をリセット
+      }
+
+      // カラーフラッシュを開始する関数
+      function startFlashing() {
+        isFlashing = true;
+        flashDiv.style.display = 'block';
+        flashInterval = setInterval(() => {
+          flashDiv.style.backgroundColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+        }, 100); // 100msごとに色を更新
+      }
+
+      // カラーフラッシュを停止する関数
+      function stopFlashing() {
+        isFlashing = false;
+        clearInterval(flashInterval);
+        flashDiv.style.display = 'none'; // エフェクトを非表示に戻す
+        flashDiv.style.backgroundColor = 'transparent'; // 色をリセット
+      }
+
+      // フェードイン・フェードアウトを開始する関数
+      function startFading() {
+        isFading = true;
+        fadeDiv.style.display = 'block';
+        let opacity = 0;
+        fadeInterval = setInterval(() => {
+          opacity = parseFloat(fadeDiv.style.opacity);
+          fadeDiv.style.opacity = opacity < 1 ? opacity + 0.1 : 0;
+        }, 100); // 100msごとに透明度を更新
+      }
+
+      // フェードイン・フェードアウトを停止する関数
+      function stopFading() {
+        isFading = false;
+        clearInterval(fadeInterval);
+        fadeDiv.style.display = 'none'; // エフェクトを非表示に戻す
+        fadeDiv.style.opacity = '0'; // 透明度をリセット
+      }
+
+      // シェイクエフェクトを開始する関数
+      function startShaking() {
+        isShaking = true;
+        shakeDiv.style.display = 'block';
+        shakeInterval = setInterval(() => {
+          const offsetX = Math.random() * 50 - 25;
+          const offsetY = Math.random() * 50 - 25;
+          shakeDiv.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        }, 50); // 50msごとに位置を更新
+      }
+
+      // シェイクエフェクトを停止する関数
+      function stopShaking() {
+        isShaking = false;
+        clearInterval(shakeInterval);
+        shakeDiv.style.display = 'none'; // エフェクトを非表示に戻す
+        shakeDiv.style.transform = 'translate(0, 0)'; // 位置をリセット
+      }
+
+      // 毎フレーム時に実行されるループイベントです
+      function tick() {
+        //box.rotation.x += 0.01;
+        //box.rotation.y += 0.01;
+
+        renderer.render(scene, camera); // レンダリング
+
+        requestAnimationFrame(tick);
+      }
+
+      tick();
+    </script>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+  </body>
+</html>
