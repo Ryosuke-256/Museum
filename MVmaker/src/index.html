@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <div class="container1" id="container1">
+        <p class="text1">Welcome!!<br>Press any key<br>or<br>Click somewhere</p>
+        <div class="box1"></div>
+    </div>
+    <script>
+        const element = document.getElementById("container1")
+        element.addEventListener("click",()=>{
+            element.remove()
+        })
+    </script>
+    <script type="module" src="./botton.js"></script>
+
+<!--2page-->
+    <div class="UIcontainer_2p" id="UIcontainer_2p">
+        <label for="fileInput" id="videobutton">
+        </label>
+        <input type="file" id="fileInput" accept="video/mp4" style="display: none;">
+    </div>
+    <script type="module" src="./botton2.js"></script>
+
+    <div class = "gridcontainer" id="gridcontainer">
+        <div class="grid" id="grid-1"></div>
+        <div class="grid" id="grid-2"></div>
+        <div class="grid" id="grid-3"></div>
+        <div class="grid" id="grid-4"></div>
+        <div class="grid" id="grid-5"></div>
+        <div class="grid" id="grid-6"></div>
+        <div class="grid" id="grid-7"></div>
+        <div class="grid" id="grid-8"></div>
+        <div class="grid" id="grid-9"></div>
+        <div class="grid" id="grid-10"></div>
+        <div class="grid" id="grid-11"></div>
+        <div class="grid" id="grid-12"></div>
+        <div class="grid" id="grid-13"></div>
+        <div class="grid" id="grid-14"></div>
+        <div class="grid" id="grid-15"></div>
+        <div class="grid" id="grid-16"></div>
+        <div class="grid" id="grid-17"></div>
+        <div class="grid" id="grid-18"></div>
+        <div class="grid" id="grid-19"></div>
+        <div class="grid" id="grid-20"></div>
+    </div>
+    <canvas class="pixi"></canvas>
+    <canvas class="webgl"></canvas>
+    <script type="module" src="./script.js"></script>
+</body>
+</html>
