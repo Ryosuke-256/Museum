@@ -97,10 +97,11 @@ body {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(5, 1fr);
     z-index: 0;
+    opacity: 0;
 }
 .grid {
-    border: 1px dashed #000;
-    opacity: 0;
+    border: 2px dashed #000;
+    opacity: 1;
     display: flex;
     justify-content: center;
     align-items: center;

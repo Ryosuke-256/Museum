@@ -2,7 +2,10 @@ import * as PIXI from 'pixi.js'
 import { gsap } from "gsap";
 
 let effectlist = 0
+let margin_sq = 0.05
+let scale_sq = 0.9
 let square_color = 0x00F5E9
+let alpha_sq = 0.5
 const sound = document.getElementById("Sound")
 sound.addEventListener("click",()=>{
     effectlist = 1
@@ -22,7 +25,6 @@ object.addEventListener("click",()=>{
 
 //4 x 4 button
 let rect
-let rect_a = [0.05,0.9,square_color,0.5] //[margin,scale,color,alpha]
 document.addEventListener('DOMContentLoaded',(e)=>{
     const grids = document.querySelectorAll('.grid')
     grids.forEach((grid, index)=>{
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 1:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -52,7 +54,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 2:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -65,7 +67,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 3:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -78,7 +80,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 4:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -91,7 +93,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 5:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -104,7 +106,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 6:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -117,7 +119,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 7:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -130,7 +132,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 8:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -143,7 +145,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 9:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -156,7 +158,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 10:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -169,7 +171,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 11:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -182,7 +184,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 12:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -195,7 +197,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 13:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -208,7 +210,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 14:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -221,7 +223,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 15:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -234,7 +236,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 16:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -247,7 +249,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 17:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -260,7 +262,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 18:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -273,7 +275,7 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
                 case 19:
                     console.log(`Grid ${index + 1} clicked!`)
@@ -286,16 +288,24 @@ document.addEventListener('DOMContentLoaded',(e)=>{
                         case 2:
                             break
                     }
-                    squarein(rect.left+rect.width*rect_a[0],rect.top+rect.height*rect_a[0],rect.width*rect_a[1],rect.height*rect_a[1],rect_a[2],rect_a[3])
+                    squarein(rect.left+rect.width*margin_sq,rect.top+rect.height*margin_sq,rect.width*scale_sq,rect.height*scale_sq,square_color,alpha_sq)
                     break
             }
         })
     })
+    const gridcontainer = document.getElementById('gridcontainer')
+    let gridanime
+    let gridanime_flag
+    document.addEventListener("click",()=>{
+        try{
+            gridanime.kill()
+        } catch(error){
+            console.log(error)
+        }
+        gridcontainer.style.opacity = 0.5
+        gridanime = gsap.to(gridcontainer.style,{opacity:0,duration:1,ease:"power1.out",})
+    })
 })
-
-const grid = document.getElementsByClassName("grid")
-//grid.style.
-
 
 //initialization
 const canvas = document.querySelector('canvas.pixi')

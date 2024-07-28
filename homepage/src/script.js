@@ -160,7 +160,6 @@ function initVideo(videoURL){
     }
 
     var vap_mag = videoaspect()
-    console.log(vap_mag)
     video_mesh = new THREE.Mesh(
         new THREE.PlaneGeometry(1.6,0.9,10,10),
         new THREE.MeshBasicMaterial({map:VideoTexture})
