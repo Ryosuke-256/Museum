@@ -153,9 +153,17 @@ const ptcltorus = new THREE.Points(
     ptclGeometry1,
     ptclmat
 )
+/**
 ptcltorus.position.set(0,0,-1.5)
 ptcltorus.rotation.y = Math.PI/2
 scene.add(ptcltorus)
+*/
+const group_efT = new THREE.Group()
+scene.add(group_efT)
+group_efT.add(ptcltorus)
+
+group_efT.rotation.y = Math.PI/2
+group_efT.position.set(0,0,-1.5)
 
 /**Particles */
 
@@ -163,7 +171,7 @@ scene.add(ptcltorus)
  * Background
  */
 //背景
-scene.background=new THREE.Color(0x333333)
+scene.background=new THREE.Color(0x888888)
 
 /**Background */
 
@@ -344,7 +352,9 @@ function animate(){
     //const elapsedTime = clock.getElapsedTime()
 
     //particles
-    ptcltorus.rotation.x = -sec*Math.PI/40
+    //ptcltorus.rotation.x = -sec*Math.PI/40
+    group_efT.rotation.x = -sec*Math.PI/40
+    ptcltorus.rotation.z = -sec*Math.PI/40
     for(let i=0;i < positions.length; i+=3){
         ptclGeometry1.attributes.position.array[i+2] += Math.sin(sec*Math.PI/8*i/1000)*0.0005
     }
