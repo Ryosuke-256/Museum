@@ -3,6 +3,8 @@ import * as PIXI from 'pixi.js'
 import { gsap } from "gsap";
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+
 //postprocessing
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -176,6 +178,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef5,ef5())
                     break
                 case 1:
                     break
@@ -189,6 +192,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef6,ef6())
                     break
                 case 1:
                     break
@@ -202,6 +206,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef7,ef7())
                     break
                 case 1:
                     break
@@ -412,6 +417,11 @@ async function squarein(x,y,width,height,colorcode,alpha){
 }
 /**2D Object */
 
+//animation
+app.ticker.add((frame)=>{
+    PIXIanime(frame)
+})
+
 /**
  * ---------------------------------Three.js------------------------------------------------
  */
@@ -420,10 +430,7 @@ async function squarein(x,y,width,height,colorcode,alpha){
  * 宣言
  */
 //base
-let canvas, scene, camera, renderer, controls
-
-//camera
-let fov
+let canvas, scene, renderer, controls
 
 //size
 const sizes = {width: window.innerWidth,height: window.innerHeight}
@@ -450,21 +457,9 @@ const mouse_window_normal =new THREE.Vector2()
 */
 // Canvas
 canvas = document.querySelector('canvas.webgl')
-
 // Scene
 scene = new THREE.Scene()
 
-//camera
-fov = 70
-camera = new THREE.PerspectiveCamera(fov, sizes.width / sizes.height, 0.01, dist(fov)*10)
-camera.position.set(0,0,dist(fov))
-scene.add(camera)
-
-function dist (fov) {
-    const fovRad= (fov/2)*(Math.PI/180)
-    const dist = ((sizes.height/position_ratio)/2)/Math.tan(fovRad)
-    return dist
-}
 /**
  * Renderer
  */
@@ -479,11 +474,99 @@ renderer.outputEncoding = THREE.sRGBEncoding
 renderer.toneMapping = THREE.NoToneMapping
 renderer.toneMappingExposure = 1
 renderer.shadowMap.enabled = true 
-renderer.setAnimationLoop(animate)
+renderer.setAnimationLoop(THREEanime)
 /**renderer */
 
 //controls
-controls = new OrbitControls( camera, canvas)
+//controls = new OrbitControls( camera, canvas)
+
+/**
+ * Camera
+ */
+let camera, camera2
+function dist (fov) {
+    const fovRad= (fov/2)*(Math.PI/180)
+    const dist = ((sizes.height/position_ratio)/2)/Math.tan(fovRad)
+    return dist
+}
+
+let fov = 70
+camera = new THREE.PerspectiveCamera(fov, sizes.width / sizes.height, 0.01, dist(fov)*10)
+camera.position.set(0,0,dist(fov))
+scene.add(camera)
+
+camera2 =  new THREE.PerspectiveCamera(fov, sizes.width / sizes.height, 0.01, dist(fov)*10)
+camera2.position.set(0,0,dist(fov))
+scene.add(camera2)
+
+controls = new PointerLockControls( camera, canvas )
+
+/** Press Z  */
+let camera_flag = false
+document.addEventListener("keydown",(e)=>{
+    if(e.keyCode == 90){
+        if (!camera_flag){
+            camera_flag = true
+            controls.lock()
+        }
+    }
+})
+document.addEventListener("keyup",(e)=>{
+    if(e.keyCode == 90){
+        if(camera_flag){
+            camera_flag = false
+            controls.unlock()
+            gsap.to(camera.position,{x:0,y:0,z:dist(fov),duration:0.5,})
+            gsap.to(camera.rotation,{x:0,y:0,z:0,duration:0.5,})
+            gsap.to(camera2.position,{x:0,y:0,z:dist(fov),duration:0.5})
+            gsap.to(camera2.rotation,{x:0,y:0,z:0,duration:0.5})
+        }
+    }
+})
+
+const rot_range = Math.PI/(18*3) //回転範囲
+const a = 10 //原点付近の傾き 値が高い方が傾斜が小さい (回転が遅い)
+const b = 5 //最高点にいくまでの距離　値が高い方が最高点が来るのが早い 5 ~ 15 くらいが良い
+
+const maxRotationY = rot_range
+const minRotationY = -rot_range
+
+const maxRotationX = rot_range
+const minRotationX = -rot_range
+
+const maxRotationZ = rot_range
+const minRotationZ = -rot_range
+
+let currentRotationY, currentRotationX, currentRotationZ
+
+window.addEventListener('mousemove',()=>{
+    //about camera
+    currentRotationX = camera.rotation.x
+    currentRotationY = camera.rotation.y
+    currentRotationZ = camera.rotation.z
+
+    //about camera2
+    //about X
+    if (currentRotationX >= 0 ) {
+        camera2.rotation.x = maxRotationX - (maxRotationX - currentRotationX / a)*Math.pow(Math.E,-currentRotationX * b)
+    } else if (currentRotationX < 0 ){
+        camera2.rotation.x = minRotationX - (minRotationX - currentRotationX / a)*Math.pow(Math.E,currentRotationX * b)
+    }
+    //about Y
+    if (currentRotationY >= 0 ){
+        camera2.rotation.y = maxRotationY - (maxRotationY - currentRotationY / a)*Math.pow(Math.E,-currentRotationY * b)
+    } else if (currentRotationY < 0 ) {
+        camera2.rotation.y = minRotationY - (minRotationY - currentRotationY / a)*Math.pow(Math.E,currentRotationY * b)
+    }
+    //about Z
+    if (currentRotationZ >= 0 ){
+        camera2.rotation.z = maxRotationZ - (maxRotationZ - currentRotationZ / a)*Math.pow(Math.E,-currentRotationZ * b)
+    } else if (currentRotationZ < 0 ) {
+        camera2.rotation.z = minRotationZ - (minRotationZ - currentRotationZ / a)*Math.pow(Math.E,currentRotationZ * b)
+    }
+})
+
+/**Camera */
 
 /**
  * Texture
@@ -500,14 +583,7 @@ const particleTexture3 = textureLoader.load('./texture/particle/kirakira01.png')
  * Object
  */
 
-//cursor
-cursor1_mesh = new THREE.Mesh(
-    new THREE.SphereGeometry(0.03,20,20),
-    new THREE.MeshBasicMaterial({
-        color:0x000000,roughness:0.1,metalness:0.8
-    })
-)
-scene.add(cursor1_mesh)
+
 /**Object */
 
 /**
@@ -538,7 +614,7 @@ document.addEventListener('click',()=>{
     }
 })
 
-//M: mute, P: pause, R: reset video
+//M: mute, P: pause, L: reset video
 document.addEventListener('keydown',(e)=>{
     if (e.keyCode == 77) {
         if (!video.muted){
@@ -556,7 +632,7 @@ document.addEventListener('keydown',(e)=>{
             video.autoplay = true
         }
     }
-    if (e.keyCode == 82) {
+    if (e.keyCode == 76) {
         initVideo(videoURL)
     }
 })
@@ -629,7 +705,7 @@ video.addEventListener("ended",()=>{
  * Background
  */
 //背景
-scene.background=new THREE.Color(0x333333)
+scene.background=new THREE.Color(0xF3F3F3)
 
 /**Background */
 
@@ -645,6 +721,11 @@ scene.add(directionalLight)
 /**
  * Postprocessing
  */
+const renderPass = new RenderPass(scene, camera2)
+const outputPass = new OutputPass()
+
+let composer = new EffectComposer(renderer)
+composer.addPass(renderPass)
 
 /**Postprocessing */
 
@@ -663,6 +744,10 @@ function onWindowResize(){
     camera.aspect = sizes.width / sizes.height
     camera.position.set(0,0,dist(fov))
     camera.updateProjectionMatrix()
+
+    camera2.aspect = sizes.width / sizes.height
+    camera2.position.set(0,0,dist(fov))
+    camera2.updateProjectionMatrix()
 
     // Update renderer
     renderer.setSize(sizes.width, sizes.height)
@@ -683,28 +768,6 @@ function WindowFullscreen(){
 }
 
 //loop animation
-function animate(){
-    //update
-    controls.update()
-    // Render
-    renderer.render(scene, camera)
-    //second
-    const sec = performance.now()/1000
-    //video
-    videotime = video.currentTime
-    timing_efQ_1.forEach((effecttime)=>{
-        if (videotime-effecttime > -0.016 && videotime-effecttime < 0 ){
-            efQ_1()
-            console.log("pressed repeated timing : "+ videotime)
-        }
-    })
-    timing_efQ_2.forEach((effectTime)=>{
-        if(videotime - effectTime > -0.016 && videotime - effectTime < 0){
-            console.log("up repeated timing : "+ videotime)
-            efQ_2()
-        }
-    })
-}
 /**Function */
 
 /**
@@ -715,28 +778,6 @@ window.addEventListener('resize', onWindowResize)
 
 //fullscreen
 //window.addEventListener("dblclick",WindowFullscreen)
-
-//number key to camera
-document.addEventListener("keydown",(e)=>{
-    if(e.keyCode == 49) {
-        camera.position.set(0,0,dist(fov))
-    }
-    if(e.keyCode == 50) {
-        camera.position.set(dist(fov),0,0)
-    }
-    if(e.keyCode == 51) {
-        camera.position.set(0,0,-dist(fov))
-    }
-    if(e.keyCode == 52) {
-        camera.position.set(-dist(fov),0,0)
-    }
-    if(e.keyCode == 53) {
-        camera.position.set(0,dist(fov),0)
-    }
-    if(e.keyCode == 54) {
-        camera.position.set(0,-dist(fov),0)
-    }
-})
 
 //mouse
 window.addEventListener('mousemove',e =>
@@ -754,8 +795,6 @@ window.addEventListener('mousemove',e =>
         mouse_window_normal.y=-(e.clientY/sizes.height)*2/position_ratio+1
     
         //WebGL関連
-        cursor1_mesh.position.x = mouse_webGL.x
-        cursor1_mesh.position.y = mouse_webGL.y
 })
 /**eventlistner */
 
@@ -775,14 +814,65 @@ function activate(timinglist,Fn){
     Fn
 }
 
-//PressZ
+//destroy
+function removePIXI(element){
+    if (element.parent) {
+        element.parent.removeChild(element);
+    }
+    element.destroy({ children: true, texture: true, baseTexture: true })
+}
+
+//Press X confirm
 document.addEventListener("keydown",(e)=>{
-    if(e.keyCode == 90){
+    if(e.keyCode == 88){
         console.log("window.width"+sizes.width/250 +"\nwindow.heigth"+sizes.height/250)
         console.log("cameraz : " + camera.position.z)
     }
 })
 
+let sec = 0
+//PIXIanime
+function PIXIanime(frame){
+}
+//threeanime
+function THREEanime(){
+    //update
+    //controls.update()
+
+    // Render
+    camera.updateProjectionMatrix()
+    camera2.updateProjectionMatrix()
+    //renderer.render(scene, camera2)
+    composer.render()
+
+    //second
+    sec = performance.now()/1000
+
+    //video
+    videotime = video.currentTime
+    timing_efQ_1.forEach((effecttime)=>{
+        if (videotime-effecttime > -0.016 && videotime-effecttime < 0 ){
+            efQ_1()
+            console.log("pressed repeated timing : "+ videotime)
+        }
+    })
+    timing_efQ_2.forEach((effectTime)=>{
+        if(videotime - effectTime > -0.016 && videotime - effectTime < 0){
+            console.log("up repeated timing : "+ videotime)
+            efQ_2()
+        }
+    })
+    timing_efT_1.forEach((effecttime)=>{
+        if (videotime-effecttime > -0.016 && videotime-effecttime < 0 ){
+            efT_1()
+        }
+    })
+    timing_efT_2.forEach((effecttime)=>{
+        if (videotime-effecttime > -0.016 && videotime-effecttime < 0 ){
+            efT_2()
+        }
+    })
+}
 /**
  * --------------------------------------------------Effect--------------------------------------
  */
@@ -793,29 +883,26 @@ document.addEventListener("keydown",(e)=>{
 const timing_efQ_1 = []
 const timing_efQ_2 = []
 //iniiallization
-const sphere2 = new THREE.Mesh(
-    new THREE.SphereGeometry(0.2,30,30),
-    new THREE.MeshStandardMaterial({color:0x00ff00, roughness:0.1, metalness: 0.8
-    })
-)
-sphere2.position.set(-0.9,0,0)
-sphere2.visible = false
-scene.add(sphere2)
+let nori = new PIXI.Graphics()
+.beginFill(0x000000)
+.drawRect(0,0,window.innerWidth,100)
+.drawRect(0,window.innerHeight-100,window.innerWidth,100)
+.endFill()
 
 //hontai
 function efQ_1(){
-    sphere2.visible=true
+    app.stage.addChild(nori)
 }
 function efQ_2(){
-    sphere2.visible = false
+    app.stage.removeChild(nori)
 }
 
 //eventlistner
-let sphere2_flag = false
+let efQ_flag = false
 document.addEventListener("keydown",(e)=>{
     if(e.keyCode == 81){
-        if(!sphere2_flag){
-            sphere2_flag = true
+        if(!efQ_flag){
+            efQ_flag = true
             const currentTime = video.currentTime
             timing_efQ_1.push(currentTime)
             console.log("keypressed timing : " + currentTime)
@@ -825,8 +912,8 @@ document.addEventListener("keydown",(e)=>{
 })
 document.addEventListener("keyup",(e)=>{
     if(e.keyCode == 81){
-        if(sphere2_flag){
-            sphere2_flag = false
+        if(efQ_flag){
+            efQ_flag = false
             const currentTime = video.currentTime
             timing_efQ_2.push(currentTime)
             console.log("keyuped timing : " + currentTime)
@@ -1021,41 +1108,121 @@ document.addEventListener('keyup',(e)=>{
  */
 const timing_efR = []
 //initialization
-const torus1 = new THREE.Mesh(
-    new THREE.TorusGeometry(1.5,1,16,32),
-    new THREE.MeshStandardMaterial({color:0xff0000, roughness:0.1, metalness: 0.8,
-        transparent:true,opacity:1
-    })
-)
-torus1.visible = false
-scene.add(torus1)
+const nori_efR = new PIXI.Graphics()
+.beginFill(0x000000)
+.drawRect(0,0,window.innerWidth,100)
+.drawRect(0,window.innerHeight-100,window.innerWidth,100)
+.endFill()
 
-let ef4_flag = false
-
+let efR_flag = false
 //hontai
 async function efR(){
-    if(!ef4_flag){
-        torus1.visible=true
-        ef4_flag = true
+    if(!efR_flag){
+        app.stage.addChild(nori_efR)
+        efR_flag = true
     } else {
-        torus1.visible = false
-        ef4_flag = false
+        app.stage.removeChild(nori_efR)
+        efR_flag = false
     }
 }
 //Eventlitner
 document.addEventListener("keydown",(e)=>{
-    if(e.keyCode == 84){
+    if(e.keyCode == 82){
         const currentTime = video.currentTime
         timing_efR.push(currentTime)
         efR()
     }
 })
 video.addEventListener("ended",()=>{
-    if(ef4_flag){
+    if(efR_flag){
         efR()
     }
 })
 /**Effect R */
+
+/**Effect 
+ * T
+ */
+const timing_efT_1 = []
+const timing_efT_2 = []
+const def_min = 0.0
+const def_max = 0.0
+const def_a = 1.0
+const gradientShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        smoothStepMin : {value:def_min},
+        smoothStepMax : {value:def_max},
+        alpha: { value: def_a }
+    },
+    vertexShader: `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1);
+        }
+    `,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform float smoothStepMin;
+        uniform float smoothStepMax;
+        uniform float alpha;
+        varying vec2 vUv;
+        void main() {
+            vec4 color = texture2D(tDiffuse, vUv);
+            float dist = distance(vUv, vec2(0.5, 0.5));
+            color.rgb *= smoothstep(smoothStepMin, smoothStepMax, 1.0 - dist);
+            color.a *= alpha;
+            gl_FragColor = color;
+        }
+    `
+}
+const gradientPass = new ShaderPass(gradientShader)
+composer.addPass(gradientPass)
+
+//hontai
+let dark_flag = false
+function efT_1(){
+    setTimeout(()=>{
+        dark_flag = true
+    },10)
+    gradientPass.uniforms.smoothStepMin.value = def_min
+    gradientPass.uniforms.smoothStepMax.value = def_max
+    gsap.to(gradientPass.uniforms.smoothStepMin,{ duration:0.3, value: 0.3 , ease:"power4.Out" })
+    gsap.to(gradientPass.uniforms.smoothStepMax,{ duration:0.3, value: 0.8 , ease:"power4.Out" })
+}
+function efT_2(){
+    setTimeout(()=>{
+        dark_flag = false
+    },10)
+    gsap.to(gradientPass.uniforms.smoothStepMin,{ duration:0.4, value: def_min, ease:"circ.inOut" })
+    gsap.to(gradientPass.uniforms.smoothStepMax,{ duration:0.4, value: def_max, ease:"circ.inOut" })
+}
+//eventlistner
+document.addEventListener("keydown",(e)=>{
+    if(e.keyCode == 84){
+        if(!dark_flag){
+            const currentTime = video.currentTime
+            timing_efT_1.push(currentTime)
+            efT_1()
+        }
+    }
+})
+document.addEventListener("keyup",(e)=>{
+    if(e.keyCode == 84){
+        if(dark_flag){
+            const currentTime = video.currentTime
+            timing_efT_2.push(currentTime)
+            efT_2()
+        }
+    }
+})
+/**Effect T */
+
+/**
+ * Effect 1
+ */
+
 
 /**
  * Effect 3
@@ -1148,7 +1315,7 @@ async function ef3(){
  * Effect 4
  */
 const timing_ef4 = []
-let efY_flag = false
+let ef4_flag = false
 //animation
 async function anime_ef4(){
     return new Promise((resolve,reject)=>{
@@ -1167,19 +1334,165 @@ async function anime_ef4(){
     })
 }
 async function ef4(){
-    if(!efY_flag){
-        efY_flag = true
+    if(!ef4_flag){
+        ef4_flag = true
         try {
             await anime_ef4()
         } catch (error){
-            console.error("efY errored",error)
+            console.error("ef4 errored",error)
         }
-        efY_flag = false
+        ef4_flag = false
     }
 }
 
-/**Effect Y */
+/**Effect 4 */
+
+/**
+ * Effect 5
+ */
+const timing_ef5 = []
+let group_ef5 = []
+let colorlist = [0x000000,0xF2486B,0xF0BD00,0x41BBDB]
+function flicker_maker(colorcode){
+    let flicker = new PIXI.Graphics()
+    .beginFill(colorcode)
+    .drawRect(0,0,window.innerWidth,window.innerHeight)
+    .endFill()
+    group_ef5.push(flicker)
+    return flicker
+}
+
+//animation ef5
+let count_ef5 = 0
+async function anime_ef5(object){
+    return new Promise((resolve,reject)=>{
+        gsap.to(object,{alpha:0,
+            duration:0.05,
+            repeat:5,
+            yoyo:true,
+            ease:"power1.inOut",
+            onComplete:resolve,
+            onInterrupt:reject
+        })
+    })
+}
+async function ef5(){
+    //initialization
+    //const object = group_ef5[count_ef5 % 4]
+    const object = flicker_maker(colorlist[count_ef5 % 4])
+    app.stage.addChild(object)
+    count_ef5 += 1
+    //animation
+    try {
+        await anime_ef5(object)
+        //await delay(300)
+    } catch (error){
+        console.log("Animation ef5 failed",error)
+    }
+    //resetp
+    app.stage.removeChild(object)
+    removePIXI(object)
+}
+/**Effect 5 */
+
+/**
+ * Effect 6
+ */
+const timing_ef6 = []
+const blur_amt = 0.0
+const def_h = blur_amt/(sizes.width)
+const def_v = blur_amt/(sizes.height)
+
+const hBlurPass = new ShaderPass(HorizontalBlurShader)
+const vBlurPass = new ShaderPass(VerticalBlurShader)
+hBlurPass.uniforms.h.value = def_h
+vBlurPass.uniforms.v.value = def_v
+composer.addPass(hBlurPass)
+composer.addPass(vBlurPass)
+
+//animation
+let blur_flag
+async function anime_ef6_1(){
+    return new Promise((resolve,reject)=>{
+        gsap.to(hBlurPass.uniforms.h,{duration:0.3,value:1/sizes.width,ease:'power4.out',
+            onComplete:resolve,
+            onInterrupt:reject
+        })
+        gsap.to(vBlurPass.uniforms.v,{duration:0.3,value:1/sizes.height,ease:'power4.out'})
+    })
+}
+async function anime_ef6_2(){
+    return new Promise((resolve,reject)=>{
+        gsap.to(hBlurPass.uniforms.h,{duration:0.3,value:def_h,ease:'circ.inOut',
+            onComplete:resolve,
+            onInterrupt:reject
+        })
+        gsap.to(vBlurPass.uniforms.v,{duration:0.3,value:def_v,ease:'circ.inOut'})    
+    })
+}
+//hontai
+async function ef6(){
+    try {
+        await anime_ef6_1()
+    } catch (error){
+        console.error('Animation ef6_1 failed',error)
+    }
+    await delay(200)
+    try {
+        await anime_ef6_2()
+    } catch (error){
+        console.error('Animation ef6_2 failed',error)
+    }
+}
+/**Effect 6 */
+
+/**
+ * Effect 7
+ */
+const timing_ef7 = []
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(sizes.width,sizes.height),0.75,0.8,0.4)
+bloomPass.threshold = 0.5
+bloomPass.strength = 0.0
+bloomPass.radius = 0.1
+composer.addPass(bloomPass)
+
+//animation
+async function anime_ef7_1(){
+    return new Promise((resolve,reject)=>{
+        gsap.to(bloomPass,{duration:0.2,strength:0.3,ease:'power4.out',
+            onComplete:resolve,
+            onInterrupt:reject
+        })
+    })
+}
+async function anime_ef7_2(){
+    return new Promise((resolve,reject)=>{
+        gsap.to(bloomPass,{duration:0.3,strength:0,ease:'circ.inOut',
+            onComplete:resolve,
+            onInterrupt:reject
+        })
+    })
+}
+
+//hontai
+async function ef7(){
+    try {
+        await anime_ef7_1()
+    } catch (error){
+        console.error('Animation ef7_1 failed',error)
+    }
+    await delay(200)
+    try {
+        await anime_ef7_2()
+    } catch (error){
+        console.error('Animation ef7_2 failed',error)
+    }
+}
+/**Effect 7 */
+
 /**Effect */
+//--------------------------------------Finalization--------------------------------------
+composer.addPass(outputPass)
 
 /**
  * ------------------------------------Video timing check--------------------------------
@@ -1205,12 +1518,27 @@ video.addEventListener('timeupdate',()=>{
     })
     timing_ef3.forEach((effectTime)=>{
         if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
-            efT()
+            ef3()
         }
     })
     timing_ef4.forEach((effectTime)=>{
         if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
-            efY()
+            ef4()
+        }
+    })
+    timing_ef5.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef5()
+        }
+    })
+    timing_ef6.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef6()
+        }
+    })
+    timing_ef7.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef7()
         }
     })
 })
