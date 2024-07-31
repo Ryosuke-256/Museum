@@ -220,6 +220,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef8,ef8())
                     break
                 case 1:
                     break
@@ -233,6 +234,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef9,ef9())
                     break
                 case 1:
                     break
@@ -246,6 +248,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef10,ef10())
                     break
                 case 1:
                     break
@@ -259,6 +262,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef11,ef11())
                     break
                 case 1:
                     break
@@ -272,6 +276,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef12,ef12())
                     break
                 case 1:
                     break
@@ -285,6 +290,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef13,ef13())
                     break
                 case 1:
                     break
@@ -298,6 +304,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef14,ef14())
                     break
                 case 1:
                     break
@@ -311,6 +318,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef15,ef15())
                     break
                 case 1:
                     break
@@ -324,6 +332,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    //activate(timing_ef16,ef16())
                     break
                 case 1:
                     break
@@ -337,6 +346,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef17,ef17())
                     break
                 case 1:
                     break
@@ -808,13 +818,14 @@ function delay(ms){
     })
 }
 
+//activate function
 function activate(timinglist,Fn){
     const currentTime = video.currentTime
     timinglist.push(currentTime)
     Fn
 }
 
-//destroy
+//destroyPIXI
 function removePIXI(element){
     if (element.parent) {
         element.parent.removeChild(element);
@@ -822,11 +833,135 @@ function removePIXI(element){
     element.destroy({ children: true, texture: true, baseTexture: true })
 }
 
+//get random number
+function getRandomInt(min,max){
+    return Math.random() * (max - min) + min
+}
+
+//get random color
+function getRandomColor() {
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+//get fleshcolor
+function getFleshColor() {
+    let h,s,v
+    h = Math.random()
+    s = getRandomInt(0.75,1)
+    v = getRandomInt(0.75,1)
+    return [h,s,v]
+}
+
+//colorcode to HSV output is 0~1
+function hexToint(hex){
+    hex = hex.replace(/^0x/, '')
+    hex = hex.replace(/^#/, '')
+    return parseInt(hex,16)
+}
+function intToHSV(bigint){
+    let r = ((bigint >> 16) & 255)/255
+    let g = ((bigint >> 8) & 255)/255
+    let b = (bigint & 255)/255
+
+    let max = Math.max(r,g,b),min = Math.min(r,g,b)
+    let h,s,v = max
+    let d = max - min
+    s = max === 0 ? 0 : d/max
+    if(max === min){
+        h = 0
+    } else {
+        switch(max){
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6
+    }
+    return [h,s,v]
+}
+//HSV to color code
+function HSVToint(hsv){
+    let h = hsv[0]
+    let s = hsv[1]
+    let v = hsv[2]
+    let r,g,b
+    let i = Math.floor(h * 6);
+    let f = h * 6 - i;
+    let p = v * (1 - s);
+    let q = v * (1 - f * s);
+    let t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+    r = Math.round(r * 255)
+    g = Math.round(g * 255)
+    b = Math.round(b * 255)
+
+    return (1 << 24) + (r << 16) + (g << 8) + b;
+}
+function intTohex(bigint){
+    return "#" + bigint.toString(16).slice(1)
+}
+
+//randomizecolor
+function randomizecolor(colorcode,amount){
+    let hsv = intToHSV(hexToint(colorcode))
+    let delta = getRandomInt(-amount,amount)
+    hsv[0] += delta
+    if (hsv[0] > 1){
+        hsv[0] = 1
+    } else if (a < 0){
+        hsv[0] = 0
+    } else {
+        hsv[0] = hsv[0]
+    }
+    return(intTohex(HSVToint(hsv)))
+}
+function randomizecolor2(colorcode,amount){
+    let hsv = intToHSV(colorcode)
+    let delta = getRandomInt(-amount,amount)
+    hsv[0] += delta
+    if (hsv[0] > 1){
+        hsv[0] = 1
+    } else if (a < 0){
+        hsv[0] = 0
+    } else {
+        hsv[0] = hsv[0]
+    }
+    return(HSVToint(hsv))
+}
+
 //Press X confirm
 document.addEventListener("keydown",(e)=>{
     if(e.keyCode == 88){
-        console.log("window.width"+sizes.width/250 +"\nwindow.heigth"+sizes.height/250)
-        console.log("cameraz : " + camera.position.z)
+        let testcolor =  0xFF6352
+        console.log("color : " + testcolor)
+        let newtestcolor = randomizecolor2(testcolor,0.02)
+        console.log("new color : " + newtestcolor)
+        const spherea = new THREE.Mesh(
+            new THREE.SphereGeometry(0.2,30,30),
+            new THREE.MeshStandardMaterial({color:testcolor, roughness:0.1, metalness: 0.8,
+            })
+        )
+        spherea.position.set(-1,0,0)
+        scene.add(spherea)
+        const sphereb = new THREE.Mesh(
+            new THREE.SphereGeometry(0.2,30,30),
+            new THREE.MeshStandardMaterial({color:newtestcolor, roughness:0.1, metalness: 0.8,
+            })
+        )
+        sphereb.position.set(1,0,0)
+        scene.add(sphereb)
     }
 })
 
@@ -1490,6 +1625,373 @@ async function ef7(){
 }
 /**Effect 7 */
 
+/**
+ * Effect 8
+ */
+const timing_ef8 = []
+function ef8() {
+    let randomColor = intTohex(HSVToint(getFleshColor()))
+    for (let i = 0; i <5; i++) {
+        //initialization
+        const container = document.querySelector('.effectcontainer')
+        let animationElement = document.createElement('div')
+        animationElement.className = 'animation-h' // 同じクラス名を使用
+        let randomX = Math.random() * (window.innerWidth - 50)
+        let randomY = Math.random() * (window.innerHeight - 50)
+        let randomsize = getRandomInt(75,150)
+        randomColor = randomizecolor(randomColor,0.05)
+        //property
+        animationElement.style.position = 'absolute'
+        animationElement.style.left = randomX + 'px'
+        animationElement.style.top = randomY + 'px'
+        animationElement.style.borderRadius = 50 + '%'
+        animationElement.style.height = randomsize + 'px'
+        animationElement.style.width = randomsize + 'px'
+        animationElement.style.backgroundColor = randomColor
+
+        container.appendChild(animationElement)
+
+        setTimeout(()=>{
+            container.removeChild(animationElement)
+        }, 1000)
+    }
+}
+/**Effect 8 */
+
+/**
+ * Effect 9
+ */
+const timing_ef9 = []
+function ef9() {
+    let randomColor = intTohex(HSVToint(getFleshColor()))
+    for (let i = 0; i < 8; i++) {
+        const container = document.querySelector('.effectcontainer')
+        let animationElement = document.createElement('div')
+        animationElement.className = 'animation-h' // 同じクラス名を使用
+        let randomX = Math.random() * (window.innerWidth - 50)
+        let randomY = Math.random() * (window.innerHeight - 50)
+        animationElement.style.position = 'absolute'
+        randomColor = randomizecolor(randomColor,0.05)
+        animationElement.style.left = randomX + 'px'
+        animationElement.style.top = randomY + 'px'
+        animationElement.style.borderRadius = 0 + '%'
+        animationElement.style.rotate = 45 + 'deg'
+        let randomsize = getRandomInt(30,50)
+        animationElement.style.height = randomsize + 'px'
+        animationElement.style.width = randomsize + 'px'
+        animationElement.style.backgroundColor = randomColor
+
+        container.appendChild(animationElement)
+
+        setTimeout(()=>{
+            container.removeChild(animationElement)
+        }, 1000)
+    }
+}
+/**Effect 9 */
+
+/**
+ * Effect 10
+ */
+const timing_ef10 = []
+function ef10() {
+    for (let i = 0; i <5; i++) {
+        const container = document.querySelector('.effectcontainer')
+        let animationElement = document.createElement('div');
+        animationElement.className = 'animation-h'; // 同じクラス名を使用
+        let randomX = Math.random() * (window.innerWidth - 50);
+        let randomY = Math.random() * (window.innerHeight - 50);
+        let randomColor = getRandomColor();
+        animationElement.style.position = 'absolute';
+        animationElement.style.left = randomX + 'px';
+        animationElement.style.top = randomY + 'px';
+        animationElement.style.backgroundColor = randomColor;
+
+        container.appendChild(animationElement)
+
+        setTimeout(()=>{
+            container.removeChild(animationElement)
+        }, 1000)
+    }
+}
+/**Effect 10 */
+/**
+ * Effect 11
+ */
+const timing_ef11 = []
+function ef11() {
+    const container = document.querySelector('.effectcontainer')
+    let numberOfPoints = getRandomInt(10,25); // 点の数
+    let radius = getRandomInt(150,300); // 円の半径
+    let startAngle = Math.random() * 360; // 開始角度 0度が右
+    let duration = 10; // 点が順次表示される間隔（ミリ秒）
+    let totalDuration = (numberOfPoints + 1) * duration;
+    let pointsize = getRandomInt(30,50); //Size
+    let randomColor = intTohex(HSVToint(getFleshColor()))
+
+    // 点を一つずつ表示する
+    for (let i = 0; i < numberOfPoints; i++) {
+        setTimeout(function() {
+            let point = document.createElement('div');
+            let angle = startAngle + (360 / numberOfPoints) * i;
+            let radian = (angle * Math.PI) / 180;
+            let x = radius * Math.cos(radian);
+            let y = radius * Math.sin(radian);
+            randomColor = randomizecolor(randomColor,0.02)
+
+            point.className = 'point appear-animation';
+            point.style.left = `calc(50% + ${x}px)`;
+            point.style.top = `calc(50% - ${y}px)`;
+            point.style.width = pointsize + 'px'
+            point.style.height = pointsize + 'px'
+            point.style.backgroundColor = randomColor
+
+            container.appendChild(point);
+        }, i * duration);
+    }
+
+    // 円が完成した後、点を一つずつ消す
+    setTimeout(function() {
+        let points = document.querySelectorAll('.point');
+        points.forEach((point, index) => {
+            setTimeout(function() {
+                point.classList.remove('appear-animation');
+                point.classList.add('disappear-animation');
+                setTimeout(function() {
+                    point.remove(); // 点を削除
+                }, 1000); // 消えるアニメーションの時間
+            }, index * duration);
+        });
+    }, totalDuration);
+}
+/**Effect 11 */
+/**
+ * Effect 12
+ */
+const timing_ef12 = []
+function ef12() {
+    const container = document.querySelector('.effectcontainer')
+    let numberOfPoints = getRandomInt(10,25); // 点の数
+    let radius = getRandomInt(150,600); // 円の半径
+    let startAngle = Math.random() * 360; // 開始角度 0度が右
+    let duration = 10; // 点が順次表示される間隔（ミリ秒）
+    let totalDuration = (numberOfPoints + 1) * duration;
+    let pointsize = getRandomInt(30,50); //Size
+    let randomColor = intTohex(HSVToint(getFleshColor()))
+
+    // 点を一つずつ表示する
+    for (let i = 0; i < numberOfPoints; i++) {
+        setTimeout(function() {
+            let point = document.createElement('div');
+            let angle = startAngle + (360 / numberOfPoints) * i;
+            let radian = (angle * Math.PI) / 180;
+            let x = radius * Math.cos(radian);
+            let y = radius * Math.sin(radian);
+            randomColor = randomizecolor(randomColor,0.02)
+
+            point.className = 'point appear-animation';
+            point.style.left = `calc(50% + ${x}px)`;
+            point.style.top = `calc(50% - ${y}px)`;
+            point.style.width = pointsize + 'px'
+            point.style.height = pointsize + 'px'
+            point.style.backgroundColor = randomColor
+            point.style.borderRadius = 0 + '%'
+            point.style.rotate = 45 + 'deg'
+
+            container.appendChild(point);
+        }, i * duration);
+    }
+
+    // 円が完成した後、点を一つずつ消す
+    setTimeout(function() {
+        let points = document.querySelectorAll('.point');
+        points.forEach((point, index) => {
+            setTimeout(function() {
+                point.classList.remove('opacity-appear');
+                point.classList.add('opacity-disappear');
+                setTimeout(function() {
+                    point.remove(); // 点を削除
+                }, 1000); // 消えるアニメーションの時間
+            }, index * duration);
+        });
+    }, totalDuration);
+}
+/**Effect 12 */
+
+/**
+ * Effect 13
+ */
+const timing_ef13 = []
+function ef13() {
+    // 三角形を含むコンテナの作成
+    let container = document.createElement('div');
+    container.className = 'triangle-container';
+    document.body.appendChild(container);
+
+    // 三角形の数
+    let numberOfTriangles = 20;
+    let radius = 100; // 円の半径
+
+    // 三角形の配置
+    for (let i = 0; i < numberOfTriangles; i++) {
+        let angle = (360 / numberOfTriangles) * i;
+        let radian = (angle * Math.PI) / 180;
+        let x = radius * Math.cos(radian) - 5; // 5は三角形の中心を調整
+        let y = radius * Math.sin(radian) - 10; // 10は三角形の高さを考慮
+
+        let triangle = document.createElement('div');
+        triangle.className = 'triangle';
+        triangle.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
+        container.appendChild(triangle);
+    }
+
+    // アニメーション終了後に要素を削除
+    setTimeout(function() {
+        container.remove();
+    }, 3000); // アニメーション時間と一致させる
+}
+/**Effect 13 */
+/**
+ * Effect 14
+ */
+const timing_ef14 = []
+function ef14() {
+    let numberOfStars = 20; // 表示する星の数
+    let radius = 300; // 円の半径
+    let startAngle = Math.random() * 360; // 開始角度
+    let duration = 30; // 星が順次表示される間隔（ミリ秒）
+    let totalDuration = (numberOfStars + 1) * duration;
+    let star
+
+    // 星を一つずつ表示する
+    for (let i = 0; i < numberOfStars; i++) {
+        setTimeout(function() {
+            let angle = startAngle + (360 / numberOfStars) * i;
+            let radian = (angle * Math.PI) / 180;
+            let x = radius * Math.cos(radian);
+            let y = radius * Math.sin(radian);
+
+            star = document.createElement('div');
+            star.className = 'star appear-animation';
+            star.style.left = `calc(50% + ${x}px)`;
+            star.style.top = `calc(50% - ${y}px)`;
+
+            document.body.appendChild(star);
+        }, i * duration);
+    }
+
+    // 円が完成した後、星を一つずつ消す
+    setTimeout(function() {
+        let stars = document.querySelectorAll('.star');
+        stars.forEach((star, index) => {
+            setTimeout(function() {
+                star.classList.remove('appear-animation');
+                star.classList.add('disappear-animation');
+                setTimeout(function() {
+                    star.remove(); // 星を削除
+                }, 500); // 消えるアニメーションの時間
+            }, index * duration);
+        });
+    }, totalDuration);
+}
+/**Effect 14 */
+/**
+ * Effect 15
+ */
+const timing_ef15 = []
+function ef15() {
+    let numberOfPetals = 30; // 数
+    let duration = 100; // 生成される間隔（ミリ秒）
+
+    for (let i = 0; i < numberOfPetals; i++) {
+        setTimeout(function() {
+            createPetal();
+        }, i * duration);
+    }
+}
+function createPetal() {
+    const container = document.querySelector('.effectcontainer')
+    let petal = document.createElement('div');
+    petal.className = 'petals';
+
+    // 花びらの初期位置をランダムに設定
+    let startX = Math.random() * window.innerWidth;
+    petal.style.left = startX + 'px';
+
+    // 花びらの初期サイズをランダムに設定
+    let size = Math.random() * 20 + 10; // 10px〜30pxの範囲
+    petal.style.width = size + 'px';
+    petal.style.height = size + 'px';
+
+    // アニメーションのランダム化
+    let duration = Math.random() * 3 + 2; // 2秒〜5秒の範囲
+    petal.style.animationDuration = duration + 's';
+
+    container.appendChild(petal);
+
+    // アニメーション終了後に花びらを削除
+    setTimeout(function() {
+        petal.remove();
+    }, duration * 1000); // アニメーションの持続時間と一致させる
+}
+/**Effect 15 */
+/**
+ * Effect 16
+ */
+const timing_ef16 = []
+
+/**Effect 16 */
+/**
+ * Effect 17
+ */
+const timing_ef17 = []
+function ef17() {
+    let numberOfDiamonds = 30; // ひし形の数
+    let duration = 200; // 新しいひし形が生成される間隔（ミリ秒）
+
+    // ひし形を生成する関数
+    function createDiamond() {
+        let diamond = document.createElement('div');
+        diamond.className = 'diamond';
+
+        // ひし形の初期位置をランダムに設定
+        let startX = Math.random() * window.innerWidth;
+        diamond.style.left = startX + 'px';
+
+        // ひし形のサイズをランダムに設定
+        let size = Math.random() * 40 + 10; // 10px〜50pxの範囲
+        diamond.style.width = size + 'px';
+        diamond.style.height = size + 'px';
+
+        document.body.appendChild(diamond);
+
+        // アニメーション終了後にひし形を削除
+        setTimeout(function() {
+            diamond.remove();
+        }, 3000); // アニメーションの持続時間と一致させる
+    }
+
+    // ひし形を生成するタイミングを設定
+    for (let i = 0; i < numberOfDiamonds; i++) {
+        setTimeout(createDiamond, i * duration);
+    }
+}
+/**Effect 17 */
+/**
+ * Effect 18
+ */
+
+/**Effect 18 */
+/**
+ * Effect 19
+ */
+
+/**Effect 19 */
+/**
+ * Effect 20
+ */
+
+/**Effect 20 */
 /**Effect */
 //--------------------------------------Finalization--------------------------------------
 composer.addPass(outputPass)
@@ -1539,6 +2041,58 @@ video.addEventListener('timeupdate',()=>{
     timing_ef7.forEach((effectTime)=>{
         if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
             ef7()
+        }
+    })
+    timing_ef8.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef8()
+        }
+    })
+    timing_ef9.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef9()
+        }
+    })
+    timing_ef10.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef10()
+        }
+    })
+    timing_ef11.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef11()
+        }
+    })
+    timing_ef12.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef12()
+        }
+    })
+    timing_ef13.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef13()
+        }
+    })
+    timing_ef14.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef14()
+        }
+    })
+    timing_ef15.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef15()
+        }
+    })
+    /** 
+    timing_ef16.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef16()
+        }
+    })
+    */
+    timing_ef17.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef17()
         }
     })
 })
