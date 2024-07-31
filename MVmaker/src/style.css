@@ -152,7 +152,7 @@ animation
     animation: expand-and-fade 0.5s ease-out forwards;
 }
 
-/* Effect11 */
+/* Effect11,12 */
 .point {
     position: absolute;
     width: 20px; 
@@ -213,43 +213,7 @@ animation
     }
 }
 
-/* Lキーのアニメーション（星形） */
-.animation-l {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background-color: transparent;
-    clip-path: polygon(
-        50% 0%,
-        61% 35%,
-        98% 35%,
-        68% 57%,
-        79% 91%,
-        50% 70%,
-        21% 91%,
-        32% 57%,
-        2% 35%,
-        39% 35%
-    );
-    background-color: #f39c12;
-    transform: translate(-50%, -50%);
-    animation: expand-and-fade 1.5s ease-out forwards;
-}
-
-/* Mキーのアニメーション */
-@keyframes expand-container {
-    0% {
-        width: 0;
-        height: 0;
-        opacity: 0;
-    }
-    100% {
-        width: 200px;
-        height: 200px;
-        opacity: 1;
-    }
-}
-
+/* Effect13 */
 @keyframes rotate-triangles {
     0% {
         transform: rotate(0deg);
@@ -258,19 +222,6 @@ animation
         transform: rotate(360deg);
     }
 }
-
-.triangle {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 10px solid red;
-    transform-origin: 50% 100%;
-    opacity: 0;
-    animation: appear 0.5s ease-out forwards;
-}
-
 @keyframes appear {
     from {
         opacity: 0;
@@ -280,20 +231,34 @@ animation
     }
 }
 
+.triangle {
+    position: absolute;
+    width: 0;
+    top:300px;
+    left:300px;
+    height: 0;
+    transform-origin: 50% 100%;
+    opacity: 0;
+    animation: appear 0.5s ease-out forwards;
+}
+
 .triangle-container {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    width: 100%;
+    height: 100%;
     margin: 0;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    animation: expand-container 3s ease-out forwards, rotate-triangles 3s linear forwards;
+    animation: rotate-triangles 3s linear forwards;
 }
 
-/* Oキーのアニメーション */
+/* Effect15 */
 @keyframes fall {
     0% {
         transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+    }
+    75% {
         opacity: 1;
     }
     100% {
@@ -314,10 +279,13 @@ animation
     pointer-events: none; /* クリックイベントを無効化 */
 }
 
-/* Pキーのひし形のアニメーション */
+/*effect17*/
 @keyframes diamond-fall {
     0% {
         transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    75% {
         opacity: 1;
     }
     100% {

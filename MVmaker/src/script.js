@@ -1824,31 +1824,54 @@ function ef12() {
 const timing_ef13 = []
 function ef13() {
     // 三角形を含むコンテナの作成
-    let container = document.createElement('div');
-    container.className = 'triangle-container';
-    document.body.appendChild(container);
+    const container = document.querySelector('.effectcontainer')
+    let containertri = document.createElement('div');
+    containertri.className = 'triangle-container';
+    container.appendChild(containertri);
 
     // 三角形の数
-    let numberOfTriangles = 20;
-    let radius = 100; // 円の半径
+    let numberOfPoints = getRandomInt(10,25); // 点の数
+    let radius = getRandomInt(150,300); // 円の半径
+    let startAngle = Math.random() * 360; // 開始角度 0度が右
+    let duration = 10; // 点が順次表示される間隔（ミリ秒）
+    let totalDuration = (numberOfPoints + 1) * duration;
+    let pointsize = getRandomInt(30,50); //Size
+    let randomColor = intTohex(HSVToint(getFleshColor()))
 
-    // 三角形の配置
-    for (let i = 0; i < numberOfTriangles; i++) {
-        let angle = (360 / numberOfTriangles) * i;
-        let radian = (angle * Math.PI) / 180;
-        let x = radius * Math.cos(radian) - 5; // 5は三角形の中心を調整
-        let y = radius * Math.sin(radian) - 10; // 10は三角形の高さを考慮
+    // 点を一つずつ表示する
+    for (let i = 0; i < numberOfPoints; i++) {
+        setTimeout(function() {
+            let point = document.createElement('div');
+            let angle = startAngle + (360 / numberOfPoints) * i;
+            let radian = (angle * Math.PI) / 180;
+            let x = radius * Math.cos(radian);
+            let y = radius * Math.sin(radian);
+            randomColor = randomizecolor(randomColor,0.02)
 
-        let triangle = document.createElement('div');
-        triangle.className = 'triangle';
-        triangle.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
-        container.appendChild(triangle);
+            point.className = 'triangle';
+            point.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
+            point.style.width = pointsize + 'px'
+            point.style.height = pointsize + 'px'
+            point.style.backgroundColor = randomColor
+            point.style.borderRadius = 50 + '%'
+
+            containertri.appendChild(point);
+        }, i * duration);
     }
 
-    // アニメーション終了後に要素を削除
+    // 円が完成した後、点を一つずつ消す
     setTimeout(function() {
-        container.remove();
-    }, 3000); // アニメーション時間と一致させる
+        let points = document.querySelectorAll('.triangle');
+        points.forEach((point, index) => {
+            setTimeout(function() {
+                point.classList.remove('appear-animation');
+                point.classList.add('disappear-animation');
+                setTimeout(function() {
+                    point.remove(); // 点を削除
+                }, 500); // 消えるアニメーションの時間
+            }, index * duration);
+        });
+    }, totalDuration);
 }
 /**Effect 13 */
 /**
@@ -1856,40 +1879,46 @@ function ef13() {
  */
 const timing_ef14 = []
 function ef14() {
-    let numberOfStars = 20; // 表示する星の数
-    let radius = 300; // 円の半径
-    let startAngle = Math.random() * 360; // 開始角度
-    let duration = 30; // 星が順次表示される間隔（ミリ秒）
-    let totalDuration = (numberOfStars + 1) * duration;
-    let star
+    const container = document.querySelector('.effectcontainer')
+    let numberOfPoints = getRandomInt(10,25); // 点の数
+    let radius = getRandomInt(150,300); // 円の半径
+    let startAngle = Math.random() * 360; // 開始角度 0度が右
+    let duration = 10; // 点が順次表示される間隔（ミリ秒）
+    let totalDuration = (numberOfPoints + 1) * duration;
+    let pointsize = getRandomInt(30,50); //Size
+    let randomColor = intTohex(HSVToint(getFleshColor()))
 
-    // 星を一つずつ表示する
-    for (let i = 0; i < numberOfStars; i++) {
+    // 点を一つずつ表示する
+    for (let i = 0; i < numberOfPoints; i++) {
         setTimeout(function() {
-            let angle = startAngle + (360 / numberOfStars) * i;
+            let point = document.createElement('div');
+            let angle = startAngle + (360 / numberOfPoints) * i;
             let radian = (angle * Math.PI) / 180;
             let x = radius * Math.cos(radian);
             let y = radius * Math.sin(radian);
+            randomColor = randomizecolor(randomColor,0.02)
 
-            star = document.createElement('div');
-            star.className = 'star appear-animation';
-            star.style.left = `calc(50% + ${x}px)`;
-            star.style.top = `calc(50% - ${y}px)`;
+            point.className = 'point appear-animation';
+            point.style.left = `calc(50% + ${x}px)`;
+            point.style.top = `calc(50% - ${y}px)`;
+            point.style.width = pointsize + 'px'
+            point.style.height = pointsize + 'px'
+            point.style.backgroundColor = randomColor
 
-            document.body.appendChild(star);
+            container.appendChild(point);
         }, i * duration);
     }
 
-    // 円が完成した後、星を一つずつ消す
+    // 円が完成した後、点を一つずつ消す
     setTimeout(function() {
-        let stars = document.querySelectorAll('.star');
-        stars.forEach((star, index) => {
+        let points = document.querySelectorAll('.point');
+        points.forEach((point, index) => {
             setTimeout(function() {
-                star.classList.remove('appear-animation');
-                star.classList.add('disappear-animation');
+                point.classList.remove('appear-animation');
+                point.classList.add('disappear-animation');
                 setTimeout(function() {
-                    star.remove(); // 星を削除
-                }, 500); // 消えるアニメーションの時間
+                    point.remove(); // 点を削除
+                }, 1000); // 消えるアニメーションの時間
             }, index * duration);
         });
     }, totalDuration);
@@ -1901,38 +1930,44 @@ function ef14() {
 const timing_ef15 = []
 function ef15() {
     let numberOfPetals = 30; // 数
-    let duration = 100; // 生成される間隔（ミリ秒）
+    let duration = 50; // 生成される間隔（ミリ秒）
+    let randomColor = intTohex(HSVToint(getFleshColor()))
+
+    function createPetal() {
+        const container = document.querySelector('.effectcontainer')
+        let petal = document.createElement('div');
+        petal.className = 'petals';
+    
+        //color
+        randomColor = randomizecolor(randomColor,0.02)
+        petal.style.backgroundColor = randomColor
+    
+        // 花びらの初期位置をランダムに設定
+        let startX = Math.random() * window.innerWidth;
+        petal.style.left = startX + 'px';
+    
+        // 花びらの初期サイズをランダムに設定
+        let size = Math.random() * 20 + 10; // 10px〜30pxの範囲
+        petal.style.width = size + 'px';
+        petal.style.height = size + 'px';
+    
+        // アニメーションのランダム化
+        let duration = getRandomInt(1,4); // 2秒〜5秒の範囲
+        petal.style.animationDuration = duration + 's';
+    
+        container.appendChild(petal);
+    
+        // アニメーション終了後に花びらを削除
+        setTimeout(function() {
+            petal.remove();
+        }, duration * 1000); // アニメーションの持続時間と一致させる
+    }
 
     for (let i = 0; i < numberOfPetals; i++) {
         setTimeout(function() {
             createPetal();
         }, i * duration);
     }
-}
-function createPetal() {
-    const container = document.querySelector('.effectcontainer')
-    let petal = document.createElement('div');
-    petal.className = 'petals';
-
-    // 花びらの初期位置をランダムに設定
-    let startX = Math.random() * window.innerWidth;
-    petal.style.left = startX + 'px';
-
-    // 花びらの初期サイズをランダムに設定
-    let size = Math.random() * 20 + 10; // 10px〜30pxの範囲
-    petal.style.width = size + 'px';
-    petal.style.height = size + 'px';
-
-    // アニメーションのランダム化
-    let duration = Math.random() * 3 + 2; // 2秒〜5秒の範囲
-    petal.style.animationDuration = duration + 's';
-
-    container.appendChild(petal);
-
-    // アニメーション終了後に花びらを削除
-    setTimeout(function() {
-        petal.remove();
-    }, duration * 1000); // アニメーションの持続時間と一致させる
 }
 /**Effect 15 */
 /**
@@ -1947,12 +1982,17 @@ const timing_ef16 = []
 const timing_ef17 = []
 function ef17() {
     let numberOfDiamonds = 30; // ひし形の数
-    let duration = 200; // 新しいひし形が生成される間隔（ミリ秒）
+    let duration = 50; // 新しいひし形が生成される間隔（ミリ秒）
+    let randomColor = intTohex(HSVToint(getFleshColor()))
 
     // ひし形を生成する関数
     function createDiamond() {
         let diamond = document.createElement('div');
         diamond.className = 'diamond';
+
+        //color
+        randomColor = randomizecolor(randomColor,0.02)
+        diamond.style.backgroundColor = randomColor
 
         // ひし形の初期位置をランダムに設定
         let startX = Math.random() * window.innerWidth;
