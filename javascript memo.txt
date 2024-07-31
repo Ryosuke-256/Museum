@@ -240,4 +240,27 @@ javascriptで追加
 
 
 
+PixiJS
+バージョン管理
+・8.0.0以降は変更が大きすぎてChatGPTが付いていけない
+・今のところは7.4.2が最適か？
+
+文法はthree.jsと似ている
+canvas⇔view
+stage⇔scene
+screen⇔camera
+
+app.stage.appendChild()で追加
+app.stage.removeChild()で消去
+
+videoの再生時間発火
+・addevnetlistener('timeupdate",()=>{})
+chromeでは0.2~0.3s毎に発火
+・animationloop内発火
+chromeでは0.015毎に発火
+・クリック間隔は最短で約0.06~0.1sくらい
+
+css
+中央配置などは親要素の位置を参照することが多いから気を付ける
+親要素はdisplay:flexがおすすめ
 
