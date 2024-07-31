@@ -1319,12 +1319,12 @@ let ef4_flag = false
 //animation
 async function anime_ef4(){
     return new Promise((resolve,reject)=>{
-        timeline.to(camera.position,{
+        timeline.to(camera2.position,{
             z:2.0,
             duration:0.75,
             ease:"power2.out",
         })
-        .to(camera.position,{
+        .to(camera2.position,{
             z:dist(fov),
             duration:0.75,
             ease:"power3.out",
