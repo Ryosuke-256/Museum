@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #A3C642;
+}
+
+.effectcontainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.rectangle {
+    position: absolute;
+    height: 0;
+    background-color: #D88D8D;
+    transition: opacity 1s ease;
+}
