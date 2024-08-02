@@ -630,6 +630,7 @@ document.addEventListener('click',()=>{
 })
 
 //M: mute, P: pause, L: reset video
+let videoplay_flag = true
 document.addEventListener('keydown',(e)=>{
     if (e.keyCode == 77) {
         if (!video.muted){
@@ -639,12 +640,14 @@ document.addEventListener('keydown',(e)=>{
         }
     }
     if (e.keyCode == 80) {
-        if (video.autoplay) {
+        if (videoplay_flag) {
             video.pause()
-            video.autoplay = false
+            videoplay_flag = false
+            //video.autoplay = false
         } else {
             video.play()
-            video.autoplay = true
+            videoplay_flag = true
+            //video.autoplay = true
         }
     }
     if (e.keyCode == 76) {
@@ -658,9 +661,9 @@ function initVideo(videoURL){
     const video_scale = 120 //1920x1080 : 120, 1280x720 : 80,640x360 : 40
     video.width = 16*video_scale
     video.height = 9*video_scale
-    video.autoplay = true
+    video.autoplay = false
     video.loop = false
-    video.muted = true
+    video.muted = false
     video.src = videoURL
     //video.play()
 
@@ -2145,8 +2148,8 @@ async function anime_ef16(){
     unit_x = window.innerWidth/dividenumbaer
     init_x = unit_x
     init_y = 100
-    let width = unit_x*0.75
-    const alpha = getRandomInt(0.75,1)
+    let width = unit_x*0.2
+    const alpha = 1
     for(let i=0;i < dividenumbaer-1 ;i++){
         let judge = Math.round(Math.random())
 
