@@ -45,6 +45,7 @@ camera = new THREE.PerspectiveCamera(fov, sizes.width / sizes.height, 0.01, dist
 camera.position.set(0,0,dist(fov))
 scene.add(camera)
 
+console.log("jhfnsaouhgfajofnanf")
 /**
  * Renderer
  */
@@ -75,7 +76,7 @@ sphere1 = new THREE.Mesh(
         color:0xff0000, roughness:0.1, metalness: 0.8
     })
 )
-scene.add(sphere1)
+//scene.add(sphere1)
 
 //cursor
 cursor1_mesh = new THREE.Mesh(
