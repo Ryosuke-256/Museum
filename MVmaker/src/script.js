@@ -1417,22 +1417,111 @@ async function ef1(){
  */
 const timing_ef2 =[]
 //initialization
-for (let i = 0; i < 4; i++){
-    let center = [window.innerWidth,window.innerHeight]
-    let positionx = center[0]
+async function initial_ef2(initx,inity,rotate,deltax,deltay,colorcode){
+    const container = new PIXI.Container()
+    app.stage.addChild(container)
+
+    const graphics1 = new PIXI.Graphics()
+    .beginFill(colorcode)
+    .drawRect(0,0,200,5)
+    .endFill()
+    graphics1.pivot.set(0,0)
+    graphics1.position.set(50,0)
+    container.addChild(graphics1)
+
+    const graphics2 = new PIXI.Graphics()
+    .beginFill(colorcode)
+    .drawRect(0,0,5,200)
+    .endFill()
+    graphics2.pivot.set(0,0)
+    graphics2.position.set(0,50)
+    container.addChild(graphics2)
+
+    const graphics3 = new PIXI.Graphics()
+    .beginFill(colorcode)
+    .drawRect(0,0,140,2)
+    .endFill()
+    graphics3.pivot.set(graphics3.width/2,graphics3.height/2)
+    graphics3.position.set(100,100)
+    graphics3.rotation = -Math.PI*1/4
+    container.addChild(graphics3)
+
+    container.rotation = rotate
+    container.position.set(initx,inity)
+
+    gsap.from(graphics1.position,{
+        y:-100,
+        duration:0.5,
+        ease:"power1.out",
+    })
+    gsap.from(graphics1,{
+        alpha:0,
+        duration:0.5
+    })
+
+    gsap.from(graphics2.position,{
+        x:-100,
+        duration:0.5,
+        ease:"power1.out",
+    })
+    gsap.from(graphics2,{
+        alpha:0,
+        duration:0.5
+    })
+
+    gsap.from(graphics3.position,{
+        x:-100,
+        y:-100,
+        duration:0.5,
+        ease:"power1.out",
+    })
+    gsap.from(graphics3,{
+        alpha:0,
+        duration:0.5,
+    })
+    //container animation
+    gsap.to(container.position,{
+        x:initx+deltax,
+        y:inity+deltay*(window.innerHeight/innerWidth),
+        duration:0.75,
+        delay:0.3,
+        ease:"power3.in",
+    })
+    gsap.to(container,{
+        alpha:0,
+        duration:0.3,
+        delay:0.6,
+        ease:"power3.in",
+    })
+    await delay(1500)
+    app.stage.removeChild(container)
+    removePIXI(container)
 }
-const x = 100
-const y = 100
-const square1 = new PIXI.Graphics()
-.beginFill(0x000000)
-.drawRect(0,0,100,20)
-.endFill()
-square1.pivot.set(0,0)
-square1.position.set()
-app.stage.addChild(square1)
 
+async function anime_ef2(amount,delta){
+    return new Promise((resolve,reject)=>{
+        const colorcode = HSVToint(getFleshColor()).toString(16).slice(1)
+        const ef2_rotationlist = [0,Math.PI/2,Math.PI,-Math.PI/2]
+        const ef2_positionlist = [[amount,amount],[window.innerWidth-amount,amount],[window.innerWidth-amount,window.innerHeight-amount],[amount,window.innerHeight-amount]]
+        const ef2_deltalist = [[delta,delta],[-delta,delta],[-delta,-delta],[delta,-delta]]
+        for (let i=0;i<4;i++){
+            initial_ef2(ef2_positionlist[i][0],ef2_positionlist[i][1],ef2_rotationlist[i],ef2_deltalist[i][0],ef2_deltalist[i][1],colorcode)
+            if (i==3){
+                resolve
+            }
+        }
+    })
+}
 
+async function ef2(){
+    try{
+        await anime_ef2(50,100)
+    } catch (error) {
+        console.error("Animation ef2 failed",error)
+    }
+}
 /**Effect 2 */
+
 /**
  * Effect 3
  */
