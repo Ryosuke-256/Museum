@@ -2,8 +2,8 @@ const sizes = {width: window.innerWidth,height: window.innerHeight}
 const buttonContainer = document.getElementById('UIcontainer_2p')
 
 //button1
-const upload_icon1 = 'url("icon/Music.png")'
-const button1_color = '0FE290'
+const upload_icon1 = 'url("icon/Music2.png")'
+const button1_color = '93F1DB'
 let button1_top = 10
 let button1_left = 25
 let button1 = createButton("Sound",button1_left,button1_top,upload_icon1,button1_color,()=>{
@@ -12,8 +12,8 @@ let button1 = createButton("Sound",button1_left,button1_top,upload_icon1,button1
 buttonContainer.appendChild(button1)
 
 //button2
-const upload_icon2 = 'url("icon/Video.png")'
-const button2_color = '0FE290'
+const upload_icon2 = 'url("icon/Video2.png")'
+const button2_color = 'FFF7DA'
 let button2_top = 10
 let button2_left = 25+75+25
 let button2 = createButton("Effect",button2_left,button2_top,upload_icon2,button2_color,()=>{
@@ -22,8 +22,8 @@ let button2 = createButton("Effect",button2_left,button2_top,upload_icon2,button
 buttonContainer.appendChild(button2)
 
 //button3
-const upload_icon3 = 'url("icon/Package.png")'
-const button3_color = '0FE290'
+const upload_icon3 = 'url("icon/Package2.png")'
+const button3_color = 'EA6990'
 let button3_top = 10
 let button3_left = 25+100+100
 let button3 = createButton("Object",button3_left,button3_top,upload_icon3,button3_color,()=>{
@@ -53,8 +53,8 @@ function createButton(id,left,top,texture,color,onClick){
     button.className = 'button1'
     button.style.top = `${top}px`
     button.style.left = `${left}px`
-    button.style.backgroundImage = texture
     button.style.background = color
+    button.style.backgroundImage = texture
     
     button.addEventListener('click',onClick)
     button.addEventListener('mouseover',()=>{

@@ -279,6 +279,8 @@ animation
     pointer-events: none; /* クリックイベントを無効化 */
 }
 
+/*effect16*/
+
 /*effect17*/
 @keyframes diamond-fall {
     0% {

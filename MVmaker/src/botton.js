@@ -9,7 +9,9 @@ let button1_left = sizes.width/2+250
 let button1 = createButton(button1_left,button1_top,upload_icon,button1_color,()=>{
     console.log('Button 1 clicked'+button1)
 })
-
+button1.addEventListener("click",()=>{
+    document.getElementById("videobutton").click()
+})
 buttonContainer.appendChild(button1)
 
 /**

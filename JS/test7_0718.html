@@ -1,0 +1,285 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
+        }
+      }
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+
+      // サイズを指定
+      const width = 960;
+      const height = 540;
+
+      // レンダラーを作成
+      const renderer = new THREE.WebGLRenderer({
+        canvas: document.querySelector("#myCanvas"),
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(width, height);
+
+      // シーンを作成
+      const scene = new THREE.Scene();
+
+      // カメラを作成
+      const camera = new THREE.PerspectiveCamera(45, width / height);
+      camera.position.set(0, 0, +1000);
+
+      // 箱を作成
+      const geometry = new THREE.BoxGeometry(400, 400, 400);
+      const material = new THREE.MeshNormalMaterial();
+      const box = new THREE.Mesh(geometry, material);
+      scene.add(box);
+
+      // ちらつきのための変数を作成
+      let isFlickering = false;
+      let flickerInterval;
+
+      // キーボードイベントを追加
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'A' || event.key === 'a') {
+          if (!isFlickering) {
+            startFlickering();
+          } else {
+            stopFlickering();
+          }
+        } else if (event.key === 'H' || event.key === 'h') {
+          if (!isWaving) {
+            startWaving();
+          } else {
+            stopWaving();
+          }
+        } else if (event.key === 'I' || event.key === 'i') {
+          if (!isZooming) {
+            startZooming();
+          } else {
+            stopZooming();
+          }
+        } else if (event.key === 'J' || event.key === 'j') {
+          if (!isSliding) {
+            startSliding();
+          } else {
+            stopSliding();
+          }
+        } else if (event.key === 'K' || event.key === 'k') {
+          if (!isInverting) {
+            startInverting();
+          } else {
+            stopInverting();
+          }
+        } else if (event.key === 'L' || event.key === 'l') {
+          if (!isGraining) {
+            startGraining();
+          } else {
+            stopGraining();
+          }
+        }
+      });
+
+      // ちらつきを開始する関数
+      function startFlickering() {
+        isFlickering = true;
+        flickerInterval = setInterval(() => {
+          scene.background = new THREE.Color(Math.random(), Math.random(), Math.random());
+        }, 100); // 100msごとに色を変更
+      }
+
+      // ちらつきを停止する関数
+      function stopFlickering() {
+        isFlickering = false;
+        clearInterval(flickerInterval);
+        scene.background = new THREE.Color(0x000000); // 元の背景色に戻す
+      }
+
+      // ウェーブエフェクト用のcanvasを作成
+      const waveCanvas = document.createElement('canvas');
+      waveCanvas.width = window.innerWidth;
+      waveCanvas.height = window.innerHeight;
+      waveCanvas.style.position = 'fixed';
+      waveCanvas.style.top = '0';
+      waveCanvas.style.left = '0';
+      waveCanvas.style.zIndex = '1000';
+      waveCanvas.style.display = 'none';
+      document.body.appendChild(waveCanvas);
+
+      const waveContext = waveCanvas.getContext('2d');
+      let isWaving = false;
+      let waveInterval;
+
+      function startWaving() {
+        isWaving = true;
+        waveCanvas.style.display = 'block';
+        waveInterval = setInterval(() => {
+          waveContext.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+          waveContext.fillStyle = 'rgba(0, 0, 0, 0.05)';
+          waveContext.fillRect(0, 0, waveCanvas.width, waveCanvas.height);
+          waveContext.strokeStyle = 'white';
+          waveContext.lineWidth = 2;
+          waveContext.beginPath();
+          for (let i = 0; i < waveCanvas.width; i++) {
+            waveContext.lineTo(i, Math.sin(i / 10 + Date.now() / 100) * 20 + waveCanvas.height / 2);
+          }
+          waveContext.stroke();
+        }, 30); // 30msごとに波を更新
+      }
+
+      function stopWaving() {
+        isWaving = false;
+        clearInterval(waveInterval);
+        waveCanvas.style.display = 'none'; // エフェクトを非表示に戻す
+      }
+
+      // ズームエフェクト用のdivを作成
+      const zoomDiv = document.createElement('div');
+      zoomDiv.style.position = 'fixed';
+      zoomDiv.style.top = '0';
+      zoomDiv.style.left = '0';
+      zoomDiv.style.width = '100%';
+      zoomDiv.style.height = '100%';
+      zoomDiv.style.transform = 'scale(1)';
+      zoomDiv.style.zIndex = '1000';
+      zoomDiv.style.display = 'none';
+      document.body.appendChild(zoomDiv);
+
+      let isZooming = false;
+      let zoomInterval;
+
+      function startZooming() {
+        isZooming = true;
+        zoomDiv.style.display = 'block';
+        let scale = 1;
+        zoomInterval = setInterval(() => {
+          scale = (scale >= 1.5) ? 1 : scale + 0.01;
+          zoomDiv.style.transform = `scale(${scale})`;
+        }, 30); // 30msごとにズームを更新
+      }
+
+      function stopZooming() {
+        isZooming = false;
+        clearInterval(zoomInterval);
+        zoomDiv.style.display = 'none'; // エフェクトを非表示に戻す
+        zoomDiv.style.transform = 'scale(1)'; // ズームをリセット
+      }
+
+      // スライドエフェクト用のdivを作成
+      const slideDiv = document.createElement('div');
+      slideDiv.style.position = 'fixed';
+      slideDiv.style.top = '0';
+      slideDiv.style.left = '0';
+      slideDiv.style.width = '100%';
+      slideDiv.style.height = '100%';
+      slideDiv.style.transform = 'translateX(0)';
+      slideDiv.style.zIndex = '1000';
+      slideDiv.style.display = 'none';
+      document.body.appendChild(slideDiv);
+
+      let isSliding = false;
+      let slideInterval;
+
+      function startSliding() {
+        isSliding = true;
+        slideDiv.style.display = 'block';
+        let position = 0;
+        slideInterval = setInterval(() => {
+          position = (position >= window.innerWidth) ? 0 : position + 10;
+          slideDiv.style.transform = `translateX(${position}px)`;
+        }, 30); // 30msごとにスライドを更新
+      }
+
+      function stopSliding() {
+        isSliding = false;
+        clearInterval(slideInterval);
+        slideDiv.style.display = 'none'; // エフェクトを非表示に戻す
+        slideDiv.style.transform = 'translateX(0)'; // 位置をリセット
+      }
+
+      // 反転エフェクト用のdivを作成
+      const invertDiv = document.createElement('div');
+      invertDiv.style.position = 'fixed';
+      invertDiv.style.top = '0';
+      invertDiv.style.left = '0';
+      invertDiv.style.width = '100%';
+      invertDiv.style.height = '100%';
+      invertDiv.style.filter = 'invert(0%)';
+      invertDiv.style.zIndex = '1000';
+      invertDiv.style.display = 'none';
+      document.body.appendChild(invertDiv);
+
+      let isInverting = false;
+      let invertInterval;
+
+      function startInverting() {
+        isInverting = true;
+        invertDiv.style.display = 'block';
+        let invert = 0;
+        invertInterval = setInterval(() => {
+          invert = (invert >= 100) ? 0 : invert + 10;
+          invertDiv.style.filter = `invert(${invert}%)`;
+        }, 100); // 100msごとに反転を更新
+      }
+
+      function stopInverting() {
+        isInverting = false;
+        clearInterval(invertInterval);
+        invertDiv.style.display = 'none'; // エフェクトを非表示に戻す
+        invertDiv.style.filter = 'invert(0%)'; // 反転をリセット
+      }
+
+      // フィルムグレインエフェクト用のcanvasを作成
+      const grainCanvas = document.createElement('canvas');
+      grainCanvas.width = window.innerWidth;
+      grainCanvas.height = window.innerHeight;
+      grainCanvas.style.position = 'fixed';
+      grainCanvas.style.top = '0';
+      grainCanvas.style.left = '0';
+      grainCanvas.style.zIndex = '1000';
+      grainCanvas.style.display = 'none';
+      document.body.appendChild(grainCanvas);
+
+      const grainContext = grainCanvas.getContext('2d');
+      let isGraining = false;
+      let grainInterval;
+
+      function startGraining() {
+        isGraining = true;
+        grainCanvas.style.display = 'block';
+        grainInterval = setInterval(() => {
+          const imageData = grainContext.createImageData(grainCanvas.width, grainCanvas.height);
+          for (let i = 0; i < imageData.data.length; i += 4) {
+            const color = Math.random() * 255;
+            imageData.data[i] = color;
+            imageData.data[i + 1] = color;
+            imageData.data[i + 2] = color;
+            imageData.data[i + 3] = 30; // 低い透明度
+          }
+          grainContext.putImageData(imageData, 0, 0);
+        }, 30); // 30msごとにノイズを更新
+      }
+
+      function stopGraining() {
+        isGraining = false;
+        clearInterval(grainInterval);
+        grainCanvas.style.display = 'none'; // エフェクトを非表示に戻す
+      }
+
+      // 毎フレーム時に実行されるループイベントです
+      function tick() {
+        box.rotation.x += 0.01;
+        box.rotation.y += 0.01;
+        
+        renderer.render(scene, camera); // レンダリング
+
+        requestAnimationFrame(tick);
+      }
+
+      tick();
+    </script>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+  </body>
+</html>

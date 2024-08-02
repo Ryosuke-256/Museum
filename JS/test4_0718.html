@@ -1,0 +1,146 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
+        }
+      }
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+
+      // サイズを指定
+      const width = 960;
+      const height = 540;
+
+      // レンダラーを作成
+      const renderer = new THREE.WebGLRenderer({
+        canvas: document.querySelector("#myCanvas"),
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(width, height);
+
+      // シーンを作成
+      const scene = new THREE.Scene();
+
+      // カメラを作成
+      const camera = new THREE.PerspectiveCamera(45, width / height);
+      camera.position.set(0, 0, +1000);
+
+      // 箱を作成
+      const geometry = new THREE.BoxGeometry(400, 400, 400);
+      const material = new THREE.MeshNormalMaterial();
+      const box = new THREE.Mesh(geometry, material);
+      scene.add(box);
+
+      // ちらつきのための変数を作成
+      let isFlickering = false;
+      let flickerInterval;
+
+      // フリック用のdivを作成
+      const flickerDiv = document.createElement('div');
+      flickerDiv.style.position = 'fixed';
+      flickerDiv.style.top = '0';
+      flickerDiv.style.left = '0';
+      flickerDiv.style.width = '100%';
+      flickerDiv.style.height = '100%';
+      flickerDiv.style.backgroundColor = 'red';
+      flickerDiv.style.zIndex = '1000';
+      flickerDiv.style.display = 'none';
+      document.body.appendChild(flickerDiv);
+
+      // キーボードイベントを追加
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'A' || event.key === 'a') {
+          if (!isFlickering) {
+            startFlickering();
+          } else {
+            stopFlickering();
+          }
+        }
+      });
+
+      // ちらつきを開始する関数
+      function startFlickering() {
+        isFlickering = true;
+        flickerInterval = setInterval(() => {
+          flickerDiv.style.display = flickerDiv.style.display === 'none' ? 'block' : 'none';
+        }, 100); // 100msごとに表示・非表示を切り替え
+      }
+
+      // ちらつきを停止する関数
+      function stopFlickering() {
+        isFlickering = false;
+        clearInterval(flickerInterval);
+        flickerDiv.style.display = 'none'; // 背景を非表示に戻す
+      }
+
+      // スノーノイズ用のcanvasを作成
+      const snowCanvas = document.createElement('canvas');
+      snowCanvas.width = window.innerWidth;
+      snowCanvas.height = window.innerHeight;
+      snowCanvas.style.position = 'fixed';
+      snowCanvas.style.top = '0';
+      snowCanvas.style.left = '0';
+      snowCanvas.style.zIndex = '1000';
+      snowCanvas.style.display = 'none';
+      document.body.appendChild(snowCanvas);
+
+      const snowContext = snowCanvas.getContext('2d');
+      let isSnowing = false;
+      let snowInterval;
+
+      // キーボードイベントを追加
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'B' || event.key === 'b') {
+          if (!isSnowing) {
+            startSnowing();
+          } else {
+            stopSnowing();
+          }
+        }
+      });
+
+      // スノーノイズを開始する関数
+      function startSnowing() {
+        isSnowing = true;
+        snowCanvas.style.display = 'block';
+        snowInterval = setInterval(() => {
+          const imageData = snowContext.createImageData(snowCanvas.width, snowCanvas.height);
+          for (let i = 0; i < imageData.data.length; i += 4) {
+            const color = Math.random() * 255;
+            imageData.data[i] = color;
+            imageData.data[i + 1] = color;
+            imageData.data[i + 2] = color;
+            imageData.data[i + 3] = 255;
+          }
+          snowContext.putImageData(imageData, 0, 0);
+        }, 100); // 100msごとにノイズを更新
+      }
+
+      // スノーノイズを停止する関数
+      function stopSnowing() {
+        isSnowing = false;
+        clearInterval(snowInterval);
+        snowCanvas.style.display = 'none'; // ノイズを非表示に戻す
+      }
+
+      tick();
+
+      // 毎フレーム時に実行されるループイベントです
+      function tick() {
+        box.rotation.x += 0.01;
+        box.rotation.y += 0.01;
+
+        renderer.render(scene, camera); // レンダリング
+
+        requestAnimationFrame(tick);
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+  </body>
+</html>

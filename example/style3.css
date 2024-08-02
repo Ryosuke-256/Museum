@@ -1,0 +1,246 @@
+@keyframes expand-and-fade {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+/* Gキーのボールのアニメーション */
+.animation-g {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: green;
+    border-radius: 50%;
+    animation: bounce 1s linear forwards;
+}
+
+/* Gキーの残像 */
+.trail {
+    position: absolute;
+    width: 50px; /* 残像の幅 */
+    height: 50px; /* 残像の高さ */
+    background-color: rgba(0, 128, 0, 0.5); /* 半透明の緑色 */
+    border-radius: 50%;
+}
+
+/* Hキーのアニメーション */
+.animation-h {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: red; /* これはJavaScriptで上書きされる */
+    border-radius: 50%;
+    animation: expand-and-fade 1s ease-out forwards;
+}
+
+/* Jキーのアニメーション */
+.star {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid yellow; /* 星の色 */
+    transform-origin: center;
+    transform: rotate(35deg);
+}
+
+.star:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid yellow; /* 星の色 */
+    transform-origin: center;
+    transform: rotate(-70deg);
+}
+
+.star:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: -17px;
+    width: 0;
+    height: 0;
+    border-left: 17px solid transparent;
+    border-right: 17px solid transparent;
+    border-bottom: 10px solid yellow; /* 星の色 */
+    transform-origin: center;
+    transform: rotate(-35deg);
+}
+
+.appear-animation {
+    animation: appear 0.9s ease-out forwards;
+}
+
+.disappear-animation {
+    animation: disappear 0.1s ease-out forwards;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Lキーのアニメーション（星形） */
+.animation-l {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 91%,
+        50% 70%,
+        21% 91%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+    );
+    background-color: #f39c12;
+    transform: translate(-50%, -50%);
+    animation: expand-and-fade 1.5s ease-out forwards;
+}
+
+/* Mキーのアニメーション */
+@keyframes expand-container {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+    100% {
+        width: 200px;
+        height: 200px;
+        opacity: 1;
+    }
+}
+
+@keyframes rotate-triangles {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 10px solid red;
+    transform-origin: 50% 100%;
+    opacity: 0;
+    animation: appear 0.5s ease-out forwards;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.triangle-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    animation: expand-container 3s ease-out forwards, rotate-triangles 3s linear forwards;
+}
+
+/* Nキーのアニメーション */
+.point {
+    position: absolute;
+    width: 10px; /* 点のサイズ */
+    height: 10px;
+    background-color: black; /* 点の色 */
+    border-radius: 50%;
+    opacity: 0; /* 初期状態で見えない */
+}
+
+.appear-animation {
+    animation: appear 0.9s ease-out forwards;
+}
+
+.disappear-animation {
+    animation: disappear 0.1s ease-out forwards;
+}
+
+/* Oキーのアニメーション */
+@keyframes fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.petals {
+    position: fixed;
+    top: -100px;
+    width: 20px; /* 花びらの幅 */
+    height: 20px; /* 花びらの高さ */
+    background-color: pink; /* 花びらの色 */
+    border-radius: 50%;
+    opacity: 1;
+    animation: fall 3s linear forwards;
+    pointer-events: none; /* クリックイベントを無効化 */
+}
+
+/* Pキーのひし形のアニメーション */
+@keyframes diamond-fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg); /* 2回転させる */
+        opacity: 0;
+    }
+}
+
+.diamond {
+    position: fixed;
+    top: -100px; /* 初期位置を画面上部の外に設定 */
+    width: 30px; /* ひし形の幅 */
+    height: 60px; /* ひし形の高さ */
+    background-color: pink; /* ひし形の色 */
+    transform: rotate(45deg); /* ひし形にするために45度回転 */
+    animation: diamond-fall 3s linear forwards;
+}
