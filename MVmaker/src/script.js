@@ -124,6 +124,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef1,ef1())
                     break
                 case 1:
                     break
@@ -137,6 +138,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef2,ef2())
                     break
                 case 1:
                     break
@@ -856,6 +858,13 @@ function getFleshColor() {
     v = getRandomInt(0.75,1)
     return [h,s,v]
 }
+function getRangeColor(hl,hh,sl,sh,vl,vh) {
+    let h,s,v
+    h = getRandomInt(hl,hh)
+    s = getRandomInt(sl,sh)
+    v = getRandomInt(vl,vh)
+    return [h,s,v]
+}
 
 //colorcode to HSV output is 0~1
 function hexToint(hex){
@@ -1357,8 +1366,73 @@ document.addEventListener("keyup",(e)=>{
 /**
  * Effect 1
  */
+const timing_ef1 = []
+//initialization
+function planemaker1(colorcode){
+    const planewidth = getRandomInt(100,300)
+    const plane1 = new PIXI.Graphics()
+    .beginFill(colorcode,0.9)
+    .drawRect(0,-500,planewidth,window.innerHeight*2.5)
+    .endFill()
+    plane1.pivot.set(planewidth/2,0)
+    plane1.rotation = Math.PI/4
+    return plane1
+}
+
+//anime
+async function anime_ef1(object){
+    return new Promise((resolve,reject)=>{
+        const deltax = getRandomInt(window.innerWidth/2,window.innerWidth*3)
+        gsap.to(object,{
+            x:deltax,
+            duration:1,
+            ease:"power2.out",
+            onComplete:resolve,
+            onInterrupt:reject
+        })
+        gsap.to(object,{
+            width:0,
+            duration:0.3,
+            delay:0.6,
+            ease:"power1.in",
+        })
+    })
+}
+//hontai
+async function ef1(){
+    const colorcode = HSVToint(getFleshColor()).toString(16).slice(1)
+    const object = planemaker1(colorcode)
+    app.stage.addChild(object)
+    try {
+        await anime_ef1(object)
+    } catch (error){
+        console.error('Animation ef1 failed',error)
+    }
+    app.stage.removeChild(object)
+    removePIXI(object)
+}
+/**Effect 1*/
+/**
+ * Effect2
+ */
+const timing_ef2 =[]
+//initialization
+for (let i = 0; i < 4; i++){
+    let center = [window.innerWidth,window.innerHeight]
+    let positionx = center[0]
+}
+const x = 100
+const y = 100
+const square1 = new PIXI.Graphics()
+.beginFill(0x000000)
+.drawRect(0,0,100,20)
+.endFill()
+square1.pivot.set(0,0)
+square1.position.set()
+app.stage.addChild(square1)
 
 
+/**Effect 2 */
 /**
  * Effect 3
  */
@@ -1486,14 +1560,12 @@ async function ef4(){
  * Effect 5
  */
 const timing_ef5 = []
-let group_ef5 = []
 let colorlist = [0x000000,0xF2486B,0xF0BD00,0x41BBDB]
 function flicker_maker(colorcode){
     let flicker = new PIXI.Graphics()
     .beginFill(colorcode)
     .drawRect(0,0,window.innerWidth,window.innerHeight)
     .endFill()
-    group_ef5.push(flicker)
     return flicker
 }
 
@@ -1987,6 +2059,7 @@ function ef17() {
 
     // ひし形を生成する関数
     function createDiamond() {
+        const container = document.querySelector('.effectcontainer')
         let diamond = document.createElement('div');
         diamond.className = 'diamond';
 
@@ -2003,7 +2076,7 @@ function ef17() {
         diamond.style.width = size + 'px';
         diamond.style.height = size + 'px';
 
-        document.body.appendChild(diamond);
+        container.appendChild(diamond);
 
         // アニメーション終了後にひし形を削除
         setTimeout(function() {
@@ -2056,6 +2129,16 @@ video.addEventListener('timeupdate',()=>{
     timing_efR.forEach((effectTime)=>{
         if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
             efR()
+        }
+    })
+    timing_ef1.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef1()
+        }
+    })
+    timing_ef1.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef2()
         }
     })
     timing_ef3.forEach((effectTime)=>{
