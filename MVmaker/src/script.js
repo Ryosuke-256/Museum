@@ -334,7 +334,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
-                    //activate(timing_ef16,ef16())
+                    activate(timing_ef16,ef16())
                     break
                 case 1:
                     break
@@ -362,6 +362,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef18,ef18())
                     break
                 case 1:
                     break
@@ -375,6 +376,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef19,ef19())
                     break
                 case 1:
                     break
@@ -388,6 +390,7 @@ function switch_fn(grid,index){
             rect = grid.getBoundingClientRect()
             switch(effectlist){
                 case 0:
+                    activate(timing_ef20,ef20())
                     break
                 case 1:
                     break
@@ -1527,10 +1530,6 @@ async function ef2(){
  */
 const timing_ef3 = []
 //initialization
-const clipplane = new THREE.Plane(new THREE.Vector3(0,0,1),-0.3)
-const ptclmat1 = makeptcltexture(0xF2486B,particleTexture1)
-const ptclmat2 = makeptcltexture(0xF0BD00,particleTexture2)
-const ptclmat3 = makeptcltexture(0x41BBDB,particleTexture3)
 function makeptcltexture(colorcode,texture){
     const ptclmat = new THREE.PointsMaterial({
         color:colorcode,
@@ -1546,6 +1545,10 @@ function makeptcltexture(colorcode,texture){
     })
     return ptclmat
 }
+const clipplane = new THREE.Plane(new THREE.Vector3(0,0,1),-0.3)
+const ptclmat1 = makeptcltexture(0xF2486B,particleTexture1)
+const ptclmat2 = makeptcltexture(0xF0BD00,particleTexture2)
+const ptclmat3 = makeptcltexture(0x41BBDB,particleTexture3)
 const ptcltorus_geo = new THREE.TorusGeometry(3,0.5,16,30)
 const ptclGeometry1 = new THREE.BufferGeometry()
 const positions = ptcltorus_geo.attributes.position.array
@@ -2135,6 +2138,55 @@ function ef15() {
  * Effect 16
  */
 const timing_ef16 = []
+async function anime_ef16(){
+    let init_x,init_y,unit_x
+    const colorcode = HSVToint(getFleshColor()).toString(16).slice(1)
+    let dividenumbaer = Math.round(getRandomInt(5,10))
+    unit_x = window.innerWidth/dividenumbaer
+    init_x = unit_x
+    init_y = 100
+    let width = unit_x*0.75
+    const alpha = getRandomInt(0.75,1)
+    for(let i=0;i < dividenumbaer-1 ;i++){
+        let judge = Math.round(Math.random())
+
+        const graphicsef16 = new PIXI.Graphics()
+        .beginFill(colorcode,alpha)
+        .drawRect(0,0,width,window.innerHeight-init_y*2)
+        .endFill()
+        graphicsef16.pivot.set(width/2,0)
+        app.stage.addChild(graphicsef16)
+        
+        if(judge == 0){
+            graphicsef16.position.set(init_x+unit_x*i,init_y)
+        }
+        if(judge == 1){
+            graphicsef16.position.set(init_x+unit_x*i,window.innerHeight-init_y)
+            graphicsef16.rotation = Math.PI
+        }
+        console.log("confirmlog1")
+        gsap.from(graphicsef16,{
+            height:0,
+            duration:0.5,
+            ease:"power1.out",
+        })
+        console.log("confirmlog2")
+        gsap.to(graphicsef16,{
+            height:0,
+            duration:0.75,
+            delay:0.5,
+            ease:"power1.in",
+        })
+        
+        setTimeout(()=>{
+            console.log("confirmlog3")
+            app.stage.removeChild(graphicsef16)
+        },1250)
+    }
+}
+function ef16(){
+    anime_ef16()
+}
 
 /**Effect 16 */
 /**
@@ -2182,16 +2234,91 @@ function ef17() {
 /**
  * Effect 18
  */
+const timing_ef18 = []
+const ef18ptclmat1 = makeptcltexture(0xAA74D1,particleTexture1)
+const ef18ptclmat2 = makeptcltexture(0x00AF8B,particleTexture2)
+const ef18ptclmat3 = makeptcltexture(0x2FD3F2,particleTexture3)
+
+//make mesh
+const group_ef18 = new THREE.Group()
+scene.add(group_ef18)
+const efptcltorus1 = new THREE.Points(ptclGeometry1,ef18ptclmat1)
+efptcltorus1.visible = false
+group_ef18.add(efptcltorus1)
+const ef18ptcltorus2 = new THREE.Points(ptclGeometry1,ef18ptclmat2)
+ef18ptcltorus2.visible = false
+group_ef18.add(ef18ptcltorus2)
+const ef18ptcltorus3 = new THREE.Points(ptclGeometry1,ef18ptclmat3)
+ef18ptcltorus3.visible = false
+group_ef18.add(ef18ptcltorus3)
+group_ef18.position.set(0,0,-1.5)
+group_ef18.rotation.y = Math.PI/2
+//animation
+let count_ef18 = 0
+async function anime_ef18(object){
+    return new Promise((resolve,reject)=>{
+        gsap.to(object.rotation,{
+            z:-Math.PI*1/4,
+            duration:1.5,
+            ease:"power1.out",
+            onComplete:resolve,
+            onInterrupt:reject
+        })
+        gsap.to(object.material,{
+            opacity:0,
+            duration:1.3,
+            ease:"power2.in"
+        })
+    })
+}
+//hontai
+async function ef18(){
+    //initialization
+    const object = group_ef18.children[count_ef18 % 3]
+    object.visible = true
+    //count+
+    count_ef18 += 1
+    //animation
+    try {
+        await anime_ef18(object)
+    } catch(error){
+        console.log("Animation18 failed",error)
+    }
+    //reset
+    object.visible = false
+    object.rotation.z = 0
+    object.material.opacity = 1
+}
 
 /**Effect 18 */
 /**
  * Effect 19
  */
-
+const timing_ef19 = []
+async function ef19(){
+    try{
+        await anime_ef2(50,100)
+    } catch (error) {
+        console.error("Animation ef2 failed",error)
+    }
+}
 /**Effect 19 */
 /**
  * Effect 20
  */
+const timing_ef20 = []
+async function ef20(){
+    const colorcode = HSVToint(getFleshColor()).toString(16).slice(1)
+    const object = planemaker1(colorcode)
+    app.stage.addChild(object)
+    try {
+        await anime_ef1(object)
+    } catch (error){
+        console.error('Animation ef1 failed',error)
+    }
+    app.stage.removeChild(object)
+    removePIXI(object)
+}
 
 /**Effect 20 */
 /**Effect */
@@ -2295,16 +2422,29 @@ video.addEventListener('timeupdate',()=>{
             ef15()
         }
     })
-    /** 
     timing_ef16.forEach((effectTime)=>{
         if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
             ef16()
         }
     })
-    */
     timing_ef17.forEach((effectTime)=>{
         if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
             ef17()
+        }
+    })
+    timing_ef18.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef18()
+        }
+    })
+    timing_ef19.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef19()
+        }
+    })
+    timing_ef20.forEach((effectTime)=>{
+        if(currentTime - effectTime > -0.25 && currentTime - effectTime < 0){
+            ef20()
         }
     })
 })
