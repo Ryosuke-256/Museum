@@ -45,7 +45,6 @@ camera = new THREE.PerspectiveCamera(fov, sizes.width / sizes.height, 0.01, dist
 camera.position.set(0,0,dist(fov))
 scene.add(camera)
 
-console.log("jhfnsaouhgfajofnanf")
 /**
  * Renderer
  */
@@ -69,14 +68,53 @@ controls = new OrbitControls( camera, canvas)
 /**
  * Object
  */
+const loader = new THREE.TextureLoader()
+const texture = loader.load(
+    './imgs/earthmap1k.jpg', // テクスチャのパス
+    (texture) => {
+        // テクスチャの読み込みが成功した場合の処理
+        console.log('Texture loaded successfully.');
+    },
+    undefined,
+    (error) => {
+        // テクスチャの読み込みが失敗した場合の処理
+        console.error('An error happened while loading the texture:', error);
+    }
+) 
+
 //cneter sphere1
 sphere1 = new THREE.Mesh(
     new THREE.SphereGeometry(0.5,100,100),
     new THREE.MeshStandardMaterial({
-        color:0xff0000, roughness:0.1, metalness: 0.8
+        roughness:0.1, metalness: 0.8, map: texture,
     })
 )
-//scene.add(sphere1)
+scene.add(sphere1)
+sphere1.castShadow = true
+
+//cneter sphere2
+const sphere2 = new THREE.Mesh(
+    new THREE.SphereGeometry(0.05,30,30),
+    new THREE.MeshStandardMaterial({
+        roughness:0.1, metalness: 0.8, map: texture,
+    })
+)
+scene.add(sphere2)
+sphere2.castShadow = true
+sphere2.position.set(1,1,1)
+
+
+
+const plane1 = new THREE.Mesh(
+    new THREE.PlaneGeometry(2,2,10,10),
+    new THREE.MeshStandardMaterial({
+        color:0xAA99CC, roughness:0.1, metalness: 0.8, side: THREE.DoubleSide,
+    })
+)
+scene.add(plane1)
+plane1.rotation.x=Math.PI/2
+plane1.position.y=-0.5
+plane1.receiveShadow = true
 
 //cursor
 cursor1_mesh = new THREE.Mesh(
@@ -115,6 +153,12 @@ scene.background=new THREE.Color(0x333333)
 directionalLight =new THREE.DirectionalLight(0xffffff,10)
 directionalLight.position.set(1,1,1)
 scene.add(directionalLight)
+directionalLight.castShadow = true
+
+const pointlight1 = new THREE.PointLight(0xffffff,10,0,1)
+pointlight1.position.set(0,0,0)
+pointlight1.castShadow = true
+scene.add(pointlight1)
 
 /** Lighting */
 
@@ -222,5 +266,7 @@ window.addEventListener('mousemove',e =>
         //WebGL関連
         cursor1_mesh.position.x = mouse_webGL.x
         cursor1_mesh.position.y = mouse_webGL.y
+        pointlight1.position.x = mouse_webGL.x
+        pointlight1.position.y = mouse_webGL.y
 })
 /**eventlistner */

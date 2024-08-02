@@ -1,0 +1,329 @@
+/* ボールが拡大しながらフェードアウトするアニメーション */
+@keyframes expand-and-fade {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+/* Bキーのアニメーション */
+.animation-b {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: blue;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: expand-and-fade 1s ease-out forwards;
+}
+
+/* Cキーのアニメーション */
+.animation-c {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: red; /* 異なる色で区別 */
+    border-radius: 50%;
+    animation: expand-and-fade 1s ease-out forwards;
+}
+
+/* ボールがバウンドするアニメーション */
+@keyframes bounce {
+    0% {
+        left: 0;
+        top: 50%;
+    }
+    25% {
+        top: 30%;
+    }
+    50% {
+        top: 50%;
+    }
+    75% {
+        top: 70%;
+    }
+    100% {
+        left: 100%;
+        top: 50%;
+    }
+}
+
+/* Dキーのアニメーション */
+.animation-d {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: green; /* ボールの色 */
+    border-radius: 50%;
+    animation: bounce 1s linear forwards;
+}
+
+/* Eキーのアニメーション（左から右に直線移動） */
+@keyframes move-straight {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.animation-e {
+    position: absolute;
+    width: 2px; /* 線の幅 */
+    height: 50px; /* 線の高さ */
+    background-color: blue; /* 線の色 */
+    top: 50%; /* 画面の中央 */
+    animation: move-straight 2s linear forwards;
+}
+
+/* Fキーのアニメーション（右から左に直線移動） */
+@keyframes move-left {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+.animation-f {
+    position: absolute;
+    width: 2px; /* 線の幅 */
+    height: 50px; /* 線の高さ */
+    background-color: red; /* 線の色 */
+    top: 50%; /* 画面の中央 */
+    animation: move-left 2s linear forwards;
+}
+
+/* Gキーのボールのアニメーション */
+.animation-g {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: green;
+    border-radius: 50%;
+    animation: bounce 1s linear forwards;
+}
+
+/* Gキーの残像 */
+.trail {
+    position: absolute;
+    width: 50px; /* 残像の幅 */
+    height: 50px; /* 残像の高さ */
+    background-color: rgba(0, 128, 0, 0.5); /* 半透明の緑色 */
+    border-radius: 50%;
+}
+
+/* Hキーのアニメーション */
+.animation-h {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: red; /* これはJavaScriptで上書きされる */
+    border-radius: 50%;
+    animation: expand-and-fade 1s ease-out forwards;
+}
+
+
+/* 時計の針が回転するアニメーション */
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.clock-face {
+    position: relative;
+    width: 200px; /* 時計全体の直径 */
+    height: 200px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    margin: 0 auto;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.clock-hand {
+    position: absolute;
+    width: 2px;
+    height: 50%; /* 針の先端が中心からどれくらい伸びるか */
+    background-color: black;
+    transform-origin: 0 100%; /* 針の先端を中心に */
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.animation-k {
+    animation: rotate 5s linear infinite;
+}
+
+
+@keyframes expand-circle {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.animation-l {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: #f39c12; /* アニメーションの色 */
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: expand-circle 1.5s ease-out forwards;
+}
+
+@keyframes expand-container {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+    100% {
+        width: 200px;
+        height: 200px;
+        opacity: 1;
+    }
+}
+
+@keyframes rotate-triangles {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 10px solid red;
+    transform-origin: 50% 100%;
+    opacity: 0;
+    animation: appear 0.5s ease-out forwards;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.triangle-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    animation: expand-container 3s ease-out forwards, rotate-triangles 3s linear forwards;
+}
+
+
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.point {
+    position: absolute;
+    width: 10px; /* 点のサイズ */
+    height: 10px;
+    background-color: black; /* 点の色 */
+    border-radius: 50%;
+    opacity: 0; /* 初期状態で見えない */
+}
+
+.appear-animation {
+    animation: appear 0.9s ease-out forwards;
+}
+
+.disappear-animation {
+    animation: disappear 0.1s ease-out forwards;
+}
+
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.petals {
+    position: fixed;
+    top: -100px;
+    width: 20px; /* 花びらの幅 */
+    height: 20px; /* 花びらの高さ */
+    background-color: pink; /* 花びらの色 */
+    border-radius: 50%;
+    opacity: 1;
+    animation: fall 3s linear forwards;
+    pointer-events: none; /* クリックイベントを無効化 */
+}
+
+/* ひし形の基本スタイル */
+.diamond {
+    position: fixed;
+    top: -100px; /* 初期位置を画面上部の外に設定 */
+    width: 30px; /* ひし形の幅 */
+    height: 30px; /* ひし形の高さ */
+    background-color: pink; /* ひし形の色 */
+    transform: rotate(45deg); /* ひし形にするために45度回転 */
+    animation: diamond-fall 3s linear forwards;
+}
+
+/* ひし形の雨粒のアニメーション */
+@keyframes diamond-fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(540deg);
+        opacity: 0;
+    }
+}
+
+
+
+
+
+
+
+
