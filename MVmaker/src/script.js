@@ -618,6 +618,7 @@ function handleFileSelect(e){
     const videoURL = URL.createObjectURL(file)
 
     initVideo(videoURL)
+    video.play()
 }
 
 //VideoInitialization
@@ -686,6 +687,11 @@ function initVideo(videoURL){
     video_mesh.scale.set(vap_mag,vap_mag,1)
     video_mesh.position.set(0,0,0)
     scene.add(video_mesh)
+
+    video.addEventListener("ended",()=>{
+        console.log("one loop was finished")
+        video.play()
+    })
 }
 
 function videoaspect(){
@@ -700,10 +706,6 @@ function videoaspect(){
 }
 
 //ended
-video.addEventListener("ended",()=>{
-    console.log("one loop was finished")
-    video.play()
-})
 
 /**Movie */
 
@@ -957,6 +959,7 @@ function randomizecolor2(colorcode,amount){
 }
 
 //Press X confirm
+/**
 document.addEventListener("keydown",(e)=>{
     if(e.keyCode == 88){
         let testcolor =  0xFF6352
@@ -979,6 +982,7 @@ document.addEventListener("keydown",(e)=>{
         scene.add(sphereb)
     }
 })
+*/
 
 let sec = 0
 //PIXIanime
@@ -1028,7 +1032,7 @@ function THREEanime(){
  */
 
 /**
- * Effect A (On during click)
+ * Effect Q (On during click)
  */
 const timing_efQ_1 = []
 const timing_efQ_2 = []
@@ -1077,71 +1081,12 @@ document.addEventListener("keyup",(e)=>{
  * Effect W (1time anime-same)
  */
 const timing_efW = []
-//initialization
-const sphere3 = new THREE.Mesh(
-    new THREE.SphereGeometry(0.2,30,30),
-    new THREE.MeshStandardMaterial({color:0x0000ff, roughness:0.1, metalness: 0.8,
-        transparent:true,opacity:0
-    })
-)
-sphere3.position.set(1.5,0,0)
-sphere3.visible = false
-scene.add(sphere3)
-
-//animation
-async function anime_efW_1(){
-    return new Promise((resolve,reject)=>{
-        gsap.to(sphere3.position,{
-            x:-1,
-            y:0.5,
-            duration:0.2,
-            ease:"power1.out",
-            onComplete:resolve,
-            onInterrupt:reject
-        })
-        gsap.to(sphere3.material,{
-            opacity:1,
-            duration:0.2,
-            ease:"power2.inout"
-        })
-    })
-}
-async function anime_efW_2(){
-    return new Promise((resolve,reject)=>{
-        gsap.to(sphere3.position,{
-            x:1.5,
-            y:0,
-            duration:0.2,
-            ease:"power1.out",
-            onComplete:resolve,
-            onInterrupt:reject
-        })
-        gsap.to(sphere3.material,{
-            opacity:0,
-            duration:0.2,
-            ease:"power2.inout"
-        })
-    })
-}
-
-//hontai
 async function efW(){
-    sphere3.visible = true
-    //animation
-    try {
-        await anime_efW_1()
-        console.log('Animation ef2_1 completed!')
-    } catch (error){
-        console.error('Animation ef2_1 failed',error)
+    try{
+        await anime_ef2(20,50)
+    } catch (error) {
+        console.error("Animation efW failed",error)
     }
-    await delay(100)
-    try {
-        await anime_efW_2()
-        console.log('Animation ef2_2 completed!')
-    } catch (error){
-        console.error('Animation ef2_2 failed',error)
-    }
-    sphere3.visible = false
 }
 
 //eventlistner
@@ -1158,97 +1103,30 @@ document.addEventListener("keydown",(e)=>{
  * Effect E (1time anime - change)
  */
 const timing_efE = []
-//initiallization
-const group_ef3 = new THREE.Group()
-scene.add(group_ef3)
-
-const box1 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.3,0.3,0.3),
-    new THREE.MeshStandardMaterial({color:0xff0000, roughness:0.1, metalness: 0.8,
-        transparent:true,opacity:1
-    })
-)
-box1.position.set(0,0,0)
-box1.visible = false
-group_ef3.add(box1)
-
-const box2 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.3,0.3,0.3),
-    new THREE.MeshStandardMaterial({color:0x00ff00, roughness:0.1, metalness: 0.8,
-        transparent:true,opacity:1
-    })
-)
-box2.position.set(0,0,0)
-box2.visible = false
-group_ef3.add(box2)
-
-const box3 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.3,0.3,0.3),
-    new THREE.MeshStandardMaterial({color:0x0000ff, roughness:0.1, metalness: 0.8,
-        transparent:true,opacity:1
-    })
-)
-box3.position.set(0,0,0)
-box3.visible = false
-group_ef3.add(box3)
-
-let count_ef3 = 0
-
 //animation
-async function anime_efE(object){
-    return new Promise((resolve,reject)=>{
-        gsap.to(object.position,{
-            x:1.5*Math.cos(count_ef3*Math.PI/6),
-            y:1.5*Math.sin(count_ef3*Math.PI/6),
-            duration:0.2,
-            ease:"power1.out",
-            onComplete:resolve,
-            onInterrupt:reject
-        })
-        gsap.to(object.material,{
-            opacity:0,
-            duration:0.2,
-            ease:"power2.inout"
-        })
-    })
-}
-
-//hontai
 async function efE(){
-    //innitialization
-    const object = group_ef3.children[count_ef3 % 3]
-    object.visible = true
-    //animation
     try {
-        await anime_efE(object)
-        console.log('Animation ef3 completed!')
+        await anime_ef4()
     } catch (error){
-        console.error('Animation ef3 failed',error)
+        console.error("ef4 errored",error)
     }
-    //reset
-    object.position.set(0,0,0)
-    object.material.opacity = 1
-    object.visible = false
-    //count+
-    count_ef3 += 1
 }
 
 //eventlistner
-let ef3_flag = false
+let efE_flag = false
 document.addEventListener('keydown',(e)=>{
     if(e.keyCode == 69){
-        if(!ef3_flag){
+        if(!efE_flag){
             const currentTime = video.currentTime
             timing_efE.push(currentTime)
-            ef3_flag = true
+            efE_flag = true
             efE()
-            console.log("now : " + count_ef3)
         }
     }
 })
 document.addEventListener('keyup',(e)=>{
     if(e.keyCode == 69){
-        ef3_flag = false
+        efE_flag = false
     }
 })
 /**Effect E */
@@ -1429,7 +1307,7 @@ async function initial_ef2(initx,inity,rotate,deltax,deltay,colorcode){
 
     const graphics1 = new PIXI.Graphics()
     .beginFill(colorcode)
-    .drawRect(0,0,200,5)
+    .drawRect(0,0,300,10)
     .endFill()
     graphics1.pivot.set(0,0)
     graphics1.position.set(50,0)
@@ -1437,7 +1315,7 @@ async function initial_ef2(initx,inity,rotate,deltax,deltay,colorcode){
 
     const graphics2 = new PIXI.Graphics()
     .beginFill(colorcode)
-    .drawRect(0,0,5,200)
+    .drawRect(0,0,10,300)
     .endFill()
     graphics2.pivot.set(0,0)
     graphics2.position.set(0,50)
@@ -1552,7 +1430,7 @@ const clipplane = new THREE.Plane(new THREE.Vector3(0,0,1),-0.3)
 const ptclmat1 = makeptcltexture(0xF2486B,particleTexture1)
 const ptclmat2 = makeptcltexture(0xF0BD00,particleTexture2)
 const ptclmat3 = makeptcltexture(0x41BBDB,particleTexture3)
-const ptcltorus_geo = new THREE.TorusGeometry(3,0.5,16,30)
+const ptcltorus_geo = new THREE.TorusGeometry(3,0.75,20,30)
 const ptclGeometry1 = new THREE.BufferGeometry()
 const positions = ptcltorus_geo.attributes.position.array
 const torusradius = 0.5
@@ -1861,25 +1739,8 @@ function ef9() {
  * Effect 10
  */
 const timing_ef10 = []
-function ef10() {
-    for (let i = 0; i <5; i++) {
-        const container = document.querySelector('.effectcontainer')
-        let animationElement = document.createElement('div');
-        animationElement.className = 'animation-h'; // 同じクラス名を使用
-        let randomX = Math.random() * (window.innerWidth - 50);
-        let randomY = Math.random() * (window.innerHeight - 50);
-        let randomColor = getRandomColor();
-        animationElement.style.position = 'absolute';
-        animationElement.style.left = randomX + 'px';
-        animationElement.style.top = randomY + 'px';
-        animationElement.style.backgroundColor = randomColor;
-
-        container.appendChild(animationElement)
-
-        setTimeout(()=>{
-            container.removeChild(animationElement)
-        }, 1000)
-    }
+function ef10(){
+    anime_ef16()
 }
 /**Effect 10 */
 /**
@@ -1989,56 +1850,18 @@ function ef12() {
  * Effect 13
  */
 const timing_ef13 = []
-function ef13() {
-    // 三角形を含むコンテナの作成
-    const container = document.querySelector('.effectcontainer')
-    let containertri = document.createElement('div');
-    containertri.className = 'triangle-container';
-    container.appendChild(containertri);
-
-    // 三角形の数
-    let numberOfPoints = getRandomInt(10,25); // 点の数
-    let radius = getRandomInt(150,300); // 円の半径
-    let startAngle = Math.random() * 360; // 開始角度 0度が右
-    let duration = 10; // 点が順次表示される間隔（ミリ秒）
-    let totalDuration = (numberOfPoints + 1) * duration;
-    let pointsize = getRandomInt(30,50); //Size
-    let randomColor = intTohex(HSVToint(getFleshColor()))
-
-    // 点を一つずつ表示する
-    for (let i = 0; i < numberOfPoints; i++) {
-        setTimeout(function() {
-            let point = document.createElement('div');
-            let angle = startAngle + (360 / numberOfPoints) * i;
-            let radian = (angle * Math.PI) / 180;
-            let x = radius * Math.cos(radian);
-            let y = radius * Math.sin(radian);
-            randomColor = randomizecolor(randomColor,0.02)
-
-            point.className = 'triangle';
-            point.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
-            point.style.width = pointsize + 'px'
-            point.style.height = pointsize + 'px'
-            point.style.backgroundColor = randomColor
-            point.style.borderRadius = 50 + '%'
-
-            containertri.appendChild(point);
-        }, i * duration);
+async function ef13(){
+    try {
+        await anime_ef7_1()
+    } catch (error){
+        console.error('Animation ef7_1 failed',error)
     }
-
-    // 円が完成した後、点を一つずつ消す
-    setTimeout(function() {
-        let points = document.querySelectorAll('.triangle');
-        points.forEach((point, index) => {
-            setTimeout(function() {
-                point.classList.remove('appear-animation');
-                point.classList.add('disappear-animation');
-                setTimeout(function() {
-                    point.remove(); // 点を削除
-                }, 500); // 消えるアニメーションの時間
-            }, index * duration);
-        });
-    }, totalDuration);
+    await delay(200)
+    try {
+        await anime_ef7_2()
+    } catch (error){
+        console.error('Animation ef7_2 failed',error)
+    }
 }
 /**Effect 13 */
 /**
@@ -2167,13 +1990,11 @@ async function anime_ef16(){
             graphicsef16.position.set(init_x+unit_x*i,window.innerHeight-init_y)
             graphicsef16.rotation = Math.PI
         }
-        console.log("confirmlog1")
         gsap.from(graphicsef16,{
             height:0,
             duration:0.5,
             ease:"power1.out",
         })
-        console.log("confirmlog2")
         gsap.to(graphicsef16,{
             height:0,
             duration:0.75,
@@ -2182,7 +2003,6 @@ async function anime_ef16(){
         })
         
         setTimeout(()=>{
-            console.log("confirmlog3")
             app.stage.removeChild(graphicsef16)
         },1250)
     }
@@ -2197,7 +2017,7 @@ function ef16(){
  */
 const timing_ef17 = []
 function ef17() {
-    let numberOfDiamonds = 30; // ひし形の数
+    let numberOfDiamonds = Math.floor(getRandomInt(1,5)); // ひし形の数
     let duration = 50; // 新しいひし形が生成される間隔（ミリ秒）
     let randomColor = intTohex(HSVToint(getFleshColor()))
 
@@ -2216,7 +2036,7 @@ function ef17() {
         diamond.style.left = startX + 'px';
 
         // ひし形のサイズをランダムに設定
-        let size = Math.random() * 40 + 10; // 10px〜50pxの範囲
+        let size = getRandomInt(100,200) // 10px〜50pxの範囲
         diamond.style.width = size + 'px';
         diamond.style.height = size + 'px';
 
