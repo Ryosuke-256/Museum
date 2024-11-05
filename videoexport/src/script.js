@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 /**
- * 宣言
+ * initialization
  */
 //base
 let canvas, scene, camera, renderer, controls
@@ -45,6 +45,8 @@ camera = new THREE.PerspectiveCamera(fov, sizes.width / sizes.height, 0.01, dist
 camera.position.set(0,0,dist(fov))
 scene.add(camera)
 
+/**Base */
+
 /**
  * Renderer
  */
@@ -68,25 +70,25 @@ controls = new OrbitControls( camera, canvas)
 /**
  * Object
  */
+/**
 const loader = new THREE.TextureLoader()
 const texture = loader.load(
-    'path/to/your/texture.jpg', // テクスチャのパス
+    'path/to/your/texture.jpg',
     (texture) => {
-        // テクスチャの読み込みが成功した場合の処理
         console.log('Texture loaded successfully.');
     },
     undefined,
     (error) => {
-        // テクスチャの読み込みが失敗した場合の処理
         console.error('An error happened while loading the texture:', error);
     }
-) 
+)
+*/
 
 //cneter sphere1
 sphere1 = new THREE.Mesh(
     new THREE.SphereGeometry(0.5,100,100),
     new THREE.MeshStandardMaterial({
-        color:0xff0000, roughness:0.1, metalness: 0.8, map :texture
+        color:0xff0000, roughness:0.1, metalness: 0.8,
     })
 )
 scene.add(sphere1)
@@ -140,7 +142,30 @@ directionalLight.castShadow = true
 
 /**Postprocessing */
 
-/**Base */
+/**
+ * video export
+ */
+let mediaRecorder
+const recordedBlobs = []
+let isRec = false
+const type = "mp4"
+
+async function startRecording(){
+    const screenStream = await navigator.mediaDevices.getDisplayMedia({video:true})
+    const options = {MimeType:'video/'+type}
+    mediaRecorder = new mediaRecorder(screenStream,options)
+    mediaRecorder.ondatavaliable = (event) => {
+        if (event.data && event.data.size > 0){
+            recordedBlobs.push(event.data)
+        }
+    }
+    
+    mediaRecorder.start()
+    console.log('recording')
+}
+
+
+/**Video export */
 
 /**
  * Function
